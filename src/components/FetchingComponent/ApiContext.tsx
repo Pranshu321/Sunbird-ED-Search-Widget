@@ -35,6 +35,10 @@ export const ApiContext = ({
     const [filtersOptionData, setFiltersOptionData, FiltersOptionRef] = useState<{
         [key: string]: any[];
     }>({});
+    const [filtersSelectedArray, setfiltersSelectedArray, FiltersSelectedArrayRef] = useState([{
+        name: "",
+        value: [],
+    }]);
 
     function FetchContentAndFilter() {
         fetchData({
@@ -59,10 +63,12 @@ export const ApiContext = ({
                 });
                 ContentResponse.splice(0, 1);
                 setcontent(ContentResponse);
+                console.log(filtersSelectedArray, filtersOptionData, content, ApiSettedFilters);
+
                 FilterOptionExtract();
             })
             .catch(err => {
-                console.log(err);
+                console.log(err, err.message);
             });
     }
 
@@ -80,16 +86,7 @@ export const ApiContext = ({
     }, []);
 
     return (
-        <div
-            onMouseEnter={() =>
-                ExtractFiltersData({
-                    content: content,
-                    filterOptionData: filtersOptionData,
-                    setfilterData: setFiltersOptionData,
-                    filters: ApiSettedFilters,
-                })
-            }
-        >
+        <div>
             {children}
             <Filter>
                 {filters.map((item, idx) =>
@@ -98,6 +95,8 @@ export const ApiContext = ({
                             key={idx + 1}
                             optionName={item}
                             options={FiltersOptionRef.current[item]}
+                            setFiltersArray={setfiltersSelectedArray}
+                            FiltersArray={FiltersSelectedArrayRef.current}
                         />
                     ) : null
                 )}

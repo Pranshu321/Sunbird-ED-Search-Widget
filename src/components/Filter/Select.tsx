@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import { TiTick } from "react-icons/ti";
+
+interface FiltersArraySelectedOptionObject {
+  name: string,
+  value: string[],
+}
+
 export interface SelectProps {
   styles?: {
     container?: {};
@@ -10,8 +16,12 @@ export interface SelectProps {
     select?: {};
     OptionsItem?: {};
   };
-  options?: Array<string>;
-  optionName?: string;
+  FiltersArray?: Array<FiltersArraySelectedOptionObject>;
+  setFiltersArray: (...args: any[]) => any;
+  options: Array<string>;
+  optionName: string;
+  filters?: Array<string>;
+  currentidx?: number;
 }
 
 const size = {
@@ -74,7 +84,7 @@ const OptionTextDiv = styled.div<{ selectedflag: boolean }>`
   }
 `;
 
-export const Select = ({ options, styles, optionName }: SelectProps) => {
+export const Select = ({ options, styles, optionName, FiltersArray, setFiltersArray }: SelectProps) => {
   const [show, setshow] = useState(false);
   const [selected, setSelected] = useState<Array<string>>([]);
 
@@ -89,6 +99,35 @@ export const Select = ({ options, styles, optionName }: SelectProps) => {
       setSelected(newarr);
     }
   };
+  // console.log("Check", FiltersSelectedArrayRef.current);
+
+  function checkIfPresent(option: string) {
+    let val: boolean = false;
+    FiltersArray?.map((item) => {
+      if (item.value) {
+        val = item.value.indexOf(option) !== -1;
+      }
+    });
+    return val;
+  }
+
+  const FiltersArrayAddition = (option: string) => {
+    FiltersArray?.map((item) => {
+      if (checkIfPresent(option)) { return; }
+      if (checkIfPresent(optionName)) {
+        console.log(optionName);
+        const it = item;
+        it.value = [...it.value, option];
+        const temp = FiltersArray.filter((item) => {
+          item.name !== optionName
+        });
+        setFiltersArray([...temp, it]);
+      }
+      else {
+        setFiltersArray([...FiltersArray, { name: optionName, value: [option] }]);
+      }
+    });
+  }
 
   // const CheckedORnot = (option: string) => {
   //   if (selected.indexOf(option) !== -1) {
@@ -135,7 +174,7 @@ export const Select = ({ options, styles, optionName }: SelectProps) => {
               <OptionTextDiv
                 selectedflag={selected.indexOf(option) !== -1}
                 key={idx + 1}
-                onClick={() => FilterAdd(option)}
+                onClick={() => { FilterAdd(option); FiltersArrayAddition(option); }}
               >
                 <Text style={{ cursor: "pointer", ...styles?.OptionsItem }}>
                   {option}
