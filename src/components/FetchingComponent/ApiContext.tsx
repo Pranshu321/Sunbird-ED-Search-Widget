@@ -1,9 +1,10 @@
 import React, { ReactNode, useEffect } from 'react';
 import { fetchData } from '../../api/api';
 import useState from 'react-usestateref';
-import { FiltersName, ExtractFiltersData } from '../../api/Service_Function';
+import { FiltersName, ExtractFiltersData, CardProps, ContentFilterDataRender } from '../../api/Service_Function';
 import { Filter } from '../Filter';
 import { Select } from '../Filter/Select';
+import { TailwindCard } from '../card/TailwindCard';
 
 interface ApiContextProps {
     children?: ReactNode;
@@ -32,6 +33,18 @@ export const ApiContext = ({
         Array<string>
     >([]);
     const [content, setcontent, contentRef] = useState<Array<object>>([]);
+    const [RenderContent, setRenderContent, RenderContentRef] = useState<
+        Array<CardProps>
+    >([
+        {
+            name: "",
+            image: "",
+            subject: "",
+            type: "",
+            publisher: "",
+            tags: [""],
+        },
+    ]);
     const [filtersOptionData, setFiltersOptionData, FiltersOptionRef] = useState<{
         [key: string]: any[];
     }>({});
@@ -63,14 +76,31 @@ export const ApiContext = ({
                 });
                 ContentResponse.splice(0, 1);
                 setcontent(ContentResponse);
-                console.log(filtersSelectedArray, filtersOptionData, content, ApiSettedFilters);
+                console.log(filtersSelectedArray, filtersOptionData, content, ApiSettedFilters, RenderContent);
 
                 FilterOptionExtract();
+                ContentRenderToShow();
             })
             .catch(err => {
                 console.log(err, err.message);
             });
     }
+
+    function ContentRenderToShow() {
+        setRenderContent(
+            ContentFilterDataRender({
+                content: contentRef.current,
+                filtersSelectedArray: FiltersSelectedArrayRef.current,
+                ApiSettedFilters: ApifiltersRef.current,
+                Filters: filters,
+            })
+        );
+        // console.log(RenderContentRef.current);
+    }
+
+    useEffect(() => {
+        ContentRenderToShow();
+    }, [FiltersSelectedArrayRef.current]);
 
     function FilterOptionExtract() {
         const data = ExtractFiltersData({
@@ -101,6 +131,19 @@ export const ApiContext = ({
                     ) : null
                 )}
             </Filter>
+            {RenderContentRef.current.length !== 1 &&
+                RenderContentRef.current.map((item, idx) => (
+                    <TailwindCard
+                        key={idx + 1}
+                        name={item.name}
+                        publisher={item.publisher}
+                        subject={item.subject}
+                        type={item.type}
+                        tags={item.tags}
+                        image={item.image}
+                    />
+                ))
+            }
         </div>
     );
 };

@@ -6,7 +6,7 @@ export interface TailwindCardProps {
   subject: string;
   type: string;
   publisher: string;
-  tags?: [];
+  tags?: Array<string>;
   styles?: {
     container?: {};
     headingDiv?: {};

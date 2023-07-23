@@ -2,11 +2,32 @@ interface FilterNameProps {
   filters: string[];
 }
 
+interface FiltersArraySelectedOptionObject {
+  name: string;
+  value: string[];
+}
+
+export interface CardProps {
+  name: string;
+  image: string;
+  subject: '';
+  type: string;
+  publisher: string;
+  tags: Array<string>;
+}
+
 interface ExtractFiltersDataProps {
   filters: string[];
   content: any;
   filterOptionData: {};
   setfilterData?: Function;
+}
+
+interface ContentFilterDataRenderProps {
+  content: any;
+  filtersSelectedArray: Array<FiltersArraySelectedOptionObject>;
+  Filters: Array<string>;
+  ApiSettedFilters: Array<string>;
 }
 
 export const FilterSingleString = ({
@@ -40,7 +61,7 @@ export const FiltersName = ({ filters }: FilterNameProps) => {
 export const ExtractFiltersData = ({
   content,
   filters,
-  filterOptionData
+  filterOptionData,
 }: ExtractFiltersDataProps) => {
   const obj: any = filterOptionData;
   filters.map(filter => {
@@ -61,4 +82,46 @@ export const ExtractFiltersData = ({
     });
   });
   return obj;
+};
+
+export const ContentFilterDataRender = ({
+  content,
+  filtersSelectedArray,
+  ApiSettedFilters,
+  Filters,
+}: ContentFilterDataRenderProps) => {
+  let RenderContent: Array<CardProps> = [
+    {
+      name: '',
+      image: '',
+      subject: '',
+      type: '',
+      publisher: '',
+      tags: [],
+    },
+  ];
+  filtersSelectedArray.map(item => {
+    const val = item.value[0];
+    const field = ApiSettedFilters[Filters.indexOf(item.name)];
+    if (val !== undefined && field !== undefined)
+      content.map((item: any) => {
+        if (item[field] !== undefined && item[field].includes(val)) {
+          const temp = {
+            name: item.name,
+            image: item.appIcon,
+            subject: item['subject'][0],
+            type: item.primaryCategory,
+            publisher: item.board,
+            tags: [
+              item.board,
+              item['se_mediums'][0],
+              item['se_gradeLevels'][0],
+              `+${item['se_gradeLevels'].length}`,
+            ],
+          };
+          RenderContent.push(temp);
+        }
+      });
+  });
+  return RenderContent.slice(1);
 };
