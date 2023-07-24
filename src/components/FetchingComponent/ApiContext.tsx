@@ -6,6 +6,13 @@ import { Filter } from '../Filter';
 import { Select } from '../Filter/Select';
 import { TailwindCard } from '../card/TailwindCard';
 
+
+interface StyleProps {
+    apiContextDiv: {};
+    FilterComponent: {};
+    CardStyle: {};
+}
+
 interface ApiContextProps {
     children?: ReactNode;
     headers?: {};
@@ -19,6 +26,7 @@ interface ApiContextProps {
     | 'force-cache'
     | 'only-if-cached'
     | 'no-cache';
+    styles?: StyleProps;
 }
 export const ApiContext = ({
     children,
@@ -27,11 +35,13 @@ export const ApiContext = ({
     url,
     method,
     cache,
+    styles
 }: ApiContextProps) => {
     const [filters, setFilters] = useState<Array<string>>([]);
     const [ApiSettedFilters, setApiSettedFilters, ApifiltersRef] = useState<
         Array<string>
     >([]);
+    const [NotIncludeFilter, setNotIncludeFilter, NotIncludeFilterRef] = useState<Array<number>>([]);
     const [content, setcontent, contentRef] = useState<Array<object>>([]);
     const [RenderContent, setRenderContent, RenderContentRef] = useState<
         Array<CardProps>
@@ -76,7 +86,7 @@ export const ApiContext = ({
                 });
                 ContentResponse.splice(0, 1);
                 setcontent(ContentResponse);
-                console.log(filtersSelectedArray, filtersOptionData, content, ApiSettedFilters, RenderContent);
+                console.log(filtersSelectedArray, filtersOptionData, content, ApiSettedFilters, RenderContent, NotIncludeFilter);
 
                 FilterOptionExtract();
                 ContentRenderToShow();
@@ -93,6 +103,7 @@ export const ApiContext = ({
                 filtersSelectedArray: FiltersSelectedArrayRef.current,
                 ApiSettedFilters: ApifiltersRef.current,
                 Filters: filters,
+                NotIncludeFilter: NotIncludeFilterRef.current,
             })
         );
         // console.log(RenderContentRef.current);
@@ -100,7 +111,7 @@ export const ApiContext = ({
 
     useEffect(() => {
         ContentRenderToShow();
-    }, [FiltersSelectedArrayRef.current]);
+    }, [FiltersSelectedArrayRef.current, NotIncludeFilterRef.current]);
 
     function FilterOptionExtract() {
         const data = ExtractFiltersData({
@@ -116,9 +127,9 @@ export const ApiContext = ({
     }, []);
 
     return (
-        <div>
+        <div style={styles?.apiContextDiv}>
             {children}
-            <Filter>
+            <Filter stylesFilterDiv={styles?.FilterComponent}>
                 {filters.map((item, idx) =>
                     FiltersOptionRef.current[item] ? (
                         <Select
@@ -127,6 +138,8 @@ export const ApiContext = ({
                             options={FiltersOptionRef.current[item]}
                             setFiltersArray={setfiltersSelectedArray}
                             FiltersArray={FiltersSelectedArrayRef.current}
+                            SetNotIncludeFilter={setNotIncludeFilter}
+                            NotIncludeFilter={NotIncludeFilterRef.current}
                         />
                     ) : null
                 )}
@@ -134,6 +147,7 @@ export const ApiContext = ({
             {RenderContentRef.current.length !== 1 &&
                 RenderContentRef.current.map((item, idx) => (
                     <TailwindCard
+                        styles={styles?.CardStyle}
                         key={idx + 1}
                         name={item.name}
                         publisher={item.publisher}

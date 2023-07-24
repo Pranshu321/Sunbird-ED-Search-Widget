@@ -21,7 +21,9 @@ export interface SelectProps {
   options: Array<string>;
   optionName: string;
   filters?: Array<string>;
+  SetNotIncludeFilter: (...args: any[]) => any;
   currentidx?: number;
+  NotIncludeFilter: Array<number>;
 }
 
 const size = {
@@ -84,7 +86,7 @@ const OptionTextDiv = styled.div<{ selectedflag: boolean }>`
   }
 `;
 
-export const Select = ({ options, styles, optionName, FiltersArray, setFiltersArray }: SelectProps) => {
+export const Select = ({ options, styles, optionName, FiltersArray, setFiltersArray, SetNotIncludeFilter, NotIncludeFilter }: SelectProps) => {
   const [show, setshow] = useState(false);
   const [selected, setSelected] = useState<Array<string>>([]);
 
@@ -103,17 +105,30 @@ export const Select = ({ options, styles, optionName, FiltersArray, setFiltersAr
 
   function checkIfPresent(option: string) {
     let val: boolean = false;
-    FiltersArray?.map((item) => {
-      if (item.value) {
-        val = item.value.indexOf(option) !== -1;
+    FiltersArray?.map((item, idx) => {
+      if (item.value.includes(option)) {
+        NotIncludeFilterIndexAdd(idx);
+        val = true;
       }
     });
     return val;
   }
 
+  const NotIncludeFilterIndexAdd = (idx: number) => {
+    SetNotIncludeFilter([...NotIncludeFilter, idx]);
+    if (NotIncludeFilter.indexOf(idx) !== -1) {
+      const newarr = NotIncludeFilter.filter((item) => {
+        return item !== idx;
+      });
+      // console.log("Yes");
+
+      SetNotIncludeFilter(newarr);
+    }
+  };
+
   const FiltersArrayAddition = (option: string) => {
     FiltersArray?.map((item) => {
-      if (checkIfPresent(option)) { return; }
+      if (checkIfPresent(option)) { return FiltersArray; }
       if (checkIfPresent(optionName)) {
         console.log(optionName);
         const it = item;
@@ -126,6 +141,7 @@ export const Select = ({ options, styles, optionName, FiltersArray, setFiltersAr
       else {
         setFiltersArray([...FiltersArray, { name: optionName, value: [option] }]);
       }
+      return FiltersArray;
     });
   }
 

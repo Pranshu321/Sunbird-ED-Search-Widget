@@ -28,6 +28,7 @@ interface ContentFilterDataRenderProps {
   filtersSelectedArray: Array<FiltersArraySelectedOptionObject>;
   Filters: Array<string>;
   ApiSettedFilters: Array<string>;
+  NotIncludeFilter: Array<number>;
 }
 
 export const FilterSingleString = ({
@@ -89,7 +90,9 @@ export const ContentFilterDataRender = ({
   filtersSelectedArray,
   ApiSettedFilters,
   Filters,
+  NotIncludeFilter,
 }: ContentFilterDataRenderProps) => {
+  const n = ApiSettedFilters.length;
   let RenderContent: Array<CardProps> = [
     {
       name: '',
@@ -100,10 +103,14 @@ export const ContentFilterDataRender = ({
       tags: [],
     },
   ];
-  filtersSelectedArray.map(item => {
+  filtersSelectedArray.map((item, idx) => {
     const val = item.value[0];
     const field = ApiSettedFilters[Filters.indexOf(item.name)];
-    if (val !== undefined && field !== undefined)
+    if (
+      val !== undefined &&
+      field !== undefined &&
+      !NotIncludeFilter.includes(idx)
+    )
       content.map((item: any) => {
         if (item[field] !== undefined && item[field].includes(val)) {
           const temp = {
@@ -114,9 +121,9 @@ export const ContentFilterDataRender = ({
             publisher: item.board,
             tags: [
               item.board,
-              item['se_mediums'][0],
-              item['se_gradeLevels'][0],
-              `+${item['se_gradeLevels'].length}`,
+              item[ApiSettedFilters[n - 1]][0],
+              item[ApiSettedFilters[n - 2]][0],
+              `+${item[ApiSettedFilters[n - 2]].length}`,
             ],
           };
           RenderContent.push(temp);
