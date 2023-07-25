@@ -38,7 +38,8 @@ export const SelectDiv = styled.div<{ filterarray: boolean }>`
   align-items: center;
   padding: ${(props: any) => (props?.filterarray ? "4px 4px" : "8px 8px")};
   border-radius: 15px;
-  width: 20rem;
+  min-width: 15rem;
+  max-width: max-content;
   background-color: white;
   cursor: pointer;
   color: darkblue;
@@ -51,7 +52,8 @@ const OptionsDiv = styled.div`
   flex-direction: column;
   position: absolute;
   margin-top: 4px;
-  width: 20rem;
+  min-width: 15rem;
+  max-width: max-content;
   color: darkblue;
   overflow-y: scroll;
   max-height: 10rem;

@@ -33,20 +33,22 @@ const Container = styled.div`
   border-color: gray;
   border-bottom-width: 0.5rem;
   border-bottom-color: #a7f3d0;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+  &:hover{
+    box-shadow: 8px 8px 8px 8px rgba(0, 0, 0, 0.2);
+    scale: 1.001;
+    animation: both 0.3s ease-in-out;
+    cursor: pointer;
+  }
   width: 98%;
-
-  @media (min-width: 640px) {
-    padding: 1.5rem;
-  }
-  @media (min-width: 768px) {
-    width: 24rem;
-  }
   @media (min-width: 1024px) {
     margin-top: 0;
     margin-bottom: 0;
-    width: 21rem;
+    width: 22rem;
+    height: 12rem;
+  }
+  @media screen and (max-width: 500px) {
+    width: 23rem;
   }
 `;
 
@@ -109,10 +111,10 @@ const TagsDiv = styled.div`
 
 const Tags = styled.div`
   display: inline-flex;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 8px;
+  padding-right: 8px;
   align-items: center;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -127,7 +129,7 @@ const LowerDiv = styled.dl`
   display: flex;
   margin-top: 1rem;
   gap: 1rem;
-  width: 70%;
+  width: 75%;
   justify-content: space-between;
 
   @media (min-width: 640px) {
@@ -138,6 +140,7 @@ const LowerDiv = styled.dl`
 const LowerItem = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 
 const DescType = styled.dt`
@@ -150,6 +153,8 @@ const DescType = styled.dt`
 const DetailDesc = styled.dd`
   font-size: 0.75rem;
   line-height: 1rem;
+  text-align: center;
+  margin-left: 0;
   color: #6b7280;
 `;
 
