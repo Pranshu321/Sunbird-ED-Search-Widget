@@ -78,6 +78,18 @@ const ListDiv = styled.div`
   }
 `;
 
+const ResetButton = styled.button`
+  background-color: #e9e8d9;
+  border: none;
+  color: black;
+  font-size: 15px;
+  font-weight: 700;
+  position: relative;
+  left: 210px;
+  cursor: pointer;
+  top: 30px;
+`;
+
 interface ApiContextProps {
   children?: ReactNode;
   headers?: {};
@@ -126,6 +138,7 @@ export const ApiContext = ({
   const [filtersOptionData, setFiltersOptionData, FiltersOptionRef] = useState<{
     [key: string]: any[];
   }>({});
+  const [Reset, setReset, ResetRef] = useState(false);
   const [
     filtersSelectedArray,
     setfiltersSelectedArray,
@@ -207,6 +220,26 @@ export const ApiContext = ({
     FetchContentAndFilter();
   }, []);
 
+  useEffect(() => {
+    setRenderContent([
+      {
+        name: '',
+        image: '',
+        subject: '',
+        type: '',
+        publisher: '',
+        tags: [],
+      },
+    ]);
+    setNotIncludeFilter([]);
+    setfiltersSelectedArray([
+      {
+        name: '',
+        value: [],
+      },
+    ]);
+  }, [Reset]);
+
   return (
     <MainDiv style={styles?.apiContextDiv}>
       {children}
@@ -214,6 +247,7 @@ export const ApiContext = ({
         <Button onClick={() => setShowFilter(!ShowFilter)}>Filter</Button>
         <FiltersDiv showfilter={ShowFilter}>
           <Filter stylesFilterDiv={styles?.FilterComponent}>
+            <ResetButton onClick={() => setReset(!Reset)}>Reset</ResetButton>
             {filters.map((item, idx) =>
               FiltersOptionRef.current[item] ? (
                 <Select
@@ -224,6 +258,7 @@ export const ApiContext = ({
                   FiltersArray={FiltersSelectedArrayRef.current}
                   SetNotIncludeFilter={setNotIncludeFilter}
                   NotIncludeFilter={NotIncludeFilterRef.current}
+                  Reset={ResetRef.current}
                 />
               ) : null
             )}
