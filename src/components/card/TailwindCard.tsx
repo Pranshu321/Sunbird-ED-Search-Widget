@@ -44,8 +44,8 @@ const Container = styled.div`
   @media (min-width: 1024px) {
     margin-top: 0;
     margin-bottom: 0;
-    width: 22rem;
-    height: 12rem;
+    width: 21rem;
+    height: 11.5rem;
   }
   @media screen and (max-width: 500px) {
     width: 23rem;

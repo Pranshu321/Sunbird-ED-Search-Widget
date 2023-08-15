@@ -92,7 +92,6 @@ export const ContentFilterDataRender = ({
   Filters,
   NotIncludeFilter,
 }: ContentFilterDataRenderProps) => {
-  const n = ApiSettedFilters.length;
   let RenderContent: Array<CardProps> = [
     {
       name: '',
@@ -121,9 +120,9 @@ export const ContentFilterDataRender = ({
             publisher: item.board,
             tags: [
               item.board,
-              item[ApiSettedFilters[n - 1]][0],
-              item[ApiSettedFilters[n - 2]][0],
-              `+${item[ApiSettedFilters[n - 2]].length}`,
+              item[ApiSettedFilters[1]][0],
+              item[ApiSettedFilters[2]][0],
+              `+${item[ApiSettedFilters[2]].length}`,
             ],
           };
           RenderContent.push(temp);

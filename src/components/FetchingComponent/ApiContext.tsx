@@ -79,15 +79,15 @@ const ListDiv = styled.div`
 `;
 
 const ResetButton = styled.button`
-  background-color: #e9e8d9;
   border: none;
   color: black;
   font-size: 15px;
   font-weight: 700;
   position: relative;
-  left: 210px;
+  left: 104px;
   cursor: pointer;
-  top: 30px;
+  top: 10px;
+  background: transparent;
 `;
 
 interface ApiContextProps {

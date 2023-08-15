@@ -40,7 +40,11 @@ export const SelectDiv = styled.div<{ filterarray: boolean }>`
   padding: ${(props: any) => (props?.filterarray ? '4px 4px' : '8px 8px')};
   border-radius: 15px;
   min-width: 15rem;
-  max-width: max-content;
+  /* max-width: max-content; */
+  overflow-x: scroll;
+   &::-webkit-scrollbar{
+    display: none;
+  }
   background-color: white;
   cursor: pointer;
   color: darkblue;
@@ -57,6 +61,9 @@ const OptionsDiv = styled.div`
   max-width: max-content;
   color: darkblue;
   overflow-y: scroll;
+  &::-webkit-scrollbar{
+    display: none;
+  }
   max-height: 10rem;
   min-height: fit-content;
   border-radius: 10px;
@@ -182,6 +189,7 @@ export const Select = ({
             color: '#000000',
             marginBottom: '5px',
             fontWeight: '600',
+            fontSize: '19px',
             ...styles?.OptionNameStyle,
           }}
         >

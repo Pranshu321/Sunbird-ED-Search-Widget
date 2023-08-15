@@ -13,7 +13,7 @@ const MainDiv = styled.div`
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  row-gap: 15px;
+  row-gap: 8px;
 `;
 
 export const Filter = ({ children, stylesFilterDiv }: FilterProps) => {
