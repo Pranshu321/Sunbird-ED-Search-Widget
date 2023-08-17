@@ -148,11 +148,11 @@ interface FilterDataExtractProps {
   filterConfig: Array<any>;
 }
 export interface CardProps {
-  name: string;
+  name?: string;
   image?: string;
-  subject: string;
-  type: string;
-  publisher: string;
+  subject?: string;
+  type?: string;
+  publisher?: string;
   tags?: Array<string>;
 }
 interface RenderContentProps {
@@ -271,7 +271,7 @@ export function RenderContentFunction({
   content,
   filtersSelected,
   filterConfig,
-  setRenderContentData
+  setRenderContentData,
 }: RenderContentProps) {
   const AddtionalFieldsObject = filterConfig[0]?.data.additionalFields;
   const MasterFieldsObject = filterConfig[0]?.data.PrimaryFields;
@@ -301,4 +301,35 @@ export function RenderContentFunction({
     });
   });
   setRenderContentData(contentArray);
+}
+
+function isArray(item: any) {
+  if (Array.isArray(item)) {
+    return item[0];
+  } else {
+    return item;
+  }
+}
+
+export function CardFieldsRender(item: any, CardFieldsObject: any) {
+  const FieldKeys = Object.keys(CardFieldsObject);
+  let ObjectReturn: CardProps = {};
+  let tagsArray: Array<string> = [];
+  FieldKeys.map((Field: string) => {
+    if (item.hasOwnProperty(CardFieldsObject[Field].field)) {
+      ObjectReturn[Field as keyof CardProps] = isArray(
+        item[CardFieldsObject[Field].field]
+      );
+    }
+    if (Field === "tags") {
+      const TagsFieldsArray = CardFieldsObject[Field].TagsFieldArray;
+      TagsFieldsArray.map((tagField: string) => {
+        if (item.hasOwnProperty(tagField))
+          tagsArray.push(isArray(item[tagField]));
+      });
+    }
+  });
+  ObjectReturn["tags"] = tagsArray;
+  // console.log("Object", ObjectReturn);
+  return ObjectReturn;
 }
