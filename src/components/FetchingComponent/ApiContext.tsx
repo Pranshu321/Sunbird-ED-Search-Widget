@@ -1,21 +1,22 @@
-import React, { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { fetchData } from '../../api/api';
 import useState from 'react-usestateref';
-import {
-  FiltersName,
-  ExtractFiltersData,
-  CardProps,
-  ContentFilterDataRender,
-} from '../../api/Service_Function';
 import { Filter } from '../Filter';
 import { Select } from '../Filter/Select';
-import { TailwindCard } from '../card/TailwindCard';
 import { styled } from 'styled-components';
+import {
+  FilterDataExtract,
+  RenderContentFunction,
+  UpdateConfig,
+} from '../../api/Service_Function';
+import { Card } from '../card/Card';
+import React from 'react';
 
 interface StyleProps {
   apiContextDiv: {};
   FilterComponent: {};
   CardStyle: {};
+  SelectStyle: {};
 }
 
 const MainDiv = styled.div`
@@ -90,195 +91,204 @@ const ResetButton = styled.button`
   background: transparent;
 `;
 
+interface FilterConfigProps {
+  name: string;
+  field: string;
+  isEnabled?: boolean;
+}
+
+// interface CardConfigProps {
+//   field: string,
+//   isEnabled: boolean
+// }
+
 interface ApiContextProps {
   children?: ReactNode;
   headers?: {};
   body?: string;
-  url: string;
+  Formurl: string;
+  Contenturl: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   cache:
-    | 'default'
-    | 'no-store'
-    | 'reload'
-    | 'force-cache'
-    | 'only-if-cached'
-    | 'no-cache';
+  | 'default'
+  | 'no-store'
+  | 'reload'
+  | 'force-cache'
+  | 'only-if-cached'
+  | 'no-cache';
   styles?: StyleProps;
+  filterConfig: Array<FilterConfigProps>;
+  addtionalFilterConfig?: Array<FilterConfigProps> | undefined;
 }
 export const ApiContext = ({
   children,
   headers,
   body,
-  url,
+  Formurl,
+  Contenturl,
   method,
   cache,
   styles,
+  filterConfig,
+  addtionalFilterConfig,
 }: ApiContextProps) => {
-  const [filters, setFilters] = useState<Array<string>>([]);
-  const [ApiSettedFilters, setApiSettedFilters, ApifiltersRef] = useState<
-    Array<string>
-  >([]);
-  const [NotIncludeFilter, setNotIncludeFilter, NotIncludeFilterRef] = useState<
-    Array<number>
-  >([]);
+  // Content or Data
   const [content, setcontent, contentRef] = useState<Array<object>>([]);
-  const [RenderContent, setRenderContent, RenderContentRef] = useState<
-    Array<CardProps>
-  >([
-    {
-      name: '',
-      image: '',
-      subject: '',
-      type: '',
-      publisher: '',
-      tags: [''],
-    },
-  ]);
-  const [ShowFilter, setShowFilter] = useState(false);
-  const [filtersOptionData, setFiltersOptionData, FiltersOptionRef] = useState<{
-    [key: string]: any[];
-  }>({});
-  const [Reset, setReset, ResetRef] = useState(false);
-  const [
-    filtersSelectedArray,
-    setfiltersSelectedArray,
-    FiltersSelectedArrayRef,
-  ] = useState([
+
+  // Filters Config
+  const [filterConfigState, setFilterConfig, filterConfigRef] = useState<
+    Array<any>
+  >([]);
+
+  // Filters Options Data
+  const [filtersOptionData, setFiltersOptionData, FiltersOptionRef] = useState<
+    Array<object>
+  >([{}]);
+
+  const [FiltersArray, setFiltersArray, FiltersArrayRef] = useState([
     {
       name: '',
       value: [],
     },
   ]);
 
-  function FetchContentAndFilter() {
+  // Filter Showing Toggle
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+
+  // Resetting the filters
+  const [reset, setReset] = useState<boolean>(false);
+
+  // Adding The Filters
+  const [addfilter, setaddfilter, addfilterRef] = useState<Array<number>>([]);
+
+  // RenderContent
+  const [RenderContent, setRenderContent, RenderContentRef] = useState<
+    Array<any>
+  >([]);
+
+  const check = false;
+  if (check) {
+    console.log(
+      addfilter,
+      FiltersArray,
+      content,
+      filtersOptionData,
+      filterConfigState
+    );
+  }
+
+  function FetchAndUpdateFilterConfig() {
     fetchData({
-      url: `${url}/content`,
-      method: method,
-      cache: cache,
       headers: headers,
       body: body,
+      url: Formurl,
+      cache: cache,
+      method: method,
+    })
+      .then((res: any) => {
+        setFilterConfig(res);
+        setFilterConfig(
+          UpdateConfig({
+            apiData: res,
+            setFilterConfig,
+            filterConfig,
+            addtionalFilterConfig,
+          })
+        );
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+
+    fetchData({
+      url: Contenturl,
+      cache,
+      method,
+      body,
+      headers,
     })
       .then(res => {
-        let ContentResponse = [{}];
-        res.map((item: any) => {
-          if (item.filters !== undefined) {
-            const arr = FiltersName({
-              filters: Object.keys(item.filters),
-            });
-            setApiSettedFilters(Object.keys(item.filters));
-            setFilters(arr);
-          } else {
-            ContentResponse.push(item);
-          }
-        });
-        ContentResponse.splice(0, 1);
-        setcontent(ContentResponse);
-        console.log(
-          filtersSelectedArray,
-          filtersOptionData,
-          content,
-          ApiSettedFilters,
-          RenderContent,
-          NotIncludeFilter
-        );
-
-        FilterOptionExtract();
-        ContentRenderToShow();
+        setcontent(res);
+        FilterDataRender();
       })
       .catch(err => {
-        console.log(err, err.message);
+        console.log(err);
       });
   }
 
-  function ContentRenderToShow() {
-    setRenderContent(
-      ContentFilterDataRender({
-        content: contentRef.current,
-        filtersSelectedArray: FiltersSelectedArrayRef.current,
-        ApiSettedFilters: ApifiltersRef.current,
-        Filters: filters,
-        NotIncludeFilter: NotIncludeFilterRef.current,
-      })
-    );
-    // console.log(RenderContentRef.current);
-  }
-
-  useEffect(() => {
-    ContentRenderToShow();
-  }, [FiltersSelectedArrayRef.current, NotIncludeFilterRef.current]);
-
-  function FilterOptionExtract() {
-    const data = ExtractFiltersData({
+  function FilterDataRender() {
+    // optionName wali field
+    // Option Value wali field
+    const ReturnData = FilterDataExtract({
       content: contentRef.current,
-      filterOptionData: FiltersOptionRef.current,
-      filters: ApifiltersRef.current,
+      filterConfig: filterConfigRef.current,
     });
-    setFiltersOptionData(data);
+    setFiltersOptionData(ReturnData.OptionValueArray);
   }
 
   useEffect(() => {
-    FetchContentAndFilter();
+    setFiltersArray([]);
+  }, [reset]);
+
+  useEffect(() => {
+    RenderContentFunction({
+      content: contentRef.current,
+      filtersSelected: FiltersArrayRef.current,
+      setRenderContentData: setRenderContent,
+      filterConfig: filterConfigRef.current,
+      RenderContent,
+    });
+  }, [addfilterRef.current]);
+
+  useEffect(() => {
+    FetchAndUpdateFilterConfig();
   }, []);
 
-  useEffect(() => {
-    setRenderContent([
-      {
-        name: '',
-        image: '',
-        subject: '',
-        type: '',
-        publisher: '',
-        tags: [],
-      },
-    ]);
-    setNotIncludeFilter([]);
-    setfiltersSelectedArray([
-      {
-        name: '',
-        value: [],
-      },
-    ]);
-  }, [Reset]);
+  console.log('Filters Array', FiltersArrayRef.current);
+  console.log('Content Array', RenderContentRef.current);
 
   return (
     <MainDiv style={styles?.apiContextDiv}>
       {children}
       <Sidebar>
-        <Button onClick={() => setShowFilter(!ShowFilter)}>Filter</Button>
-        <FiltersDiv showfilter={ShowFilter}>
+        <Button onClick={() => setShowFilter(!showFilter)}>Filter</Button>
+        <FiltersDiv showfilter={showFilter}>
           <Filter stylesFilterDiv={styles?.FilterComponent}>
-            <ResetButton onClick={() => setReset(!Reset)}>Reset</ResetButton>
-            {filters.map((item, idx) =>
-              FiltersOptionRef.current[item] ? (
+            <ResetButton onClick={() => setReset(!reset)}>Reset</ResetButton>
+            {FiltersOptionRef.current?.map((item: any, index) => {
+              return (
                 <Select
-                  key={idx + 1}
-                  optionName={item}
-                  options={FiltersOptionRef.current[item]}
-                  setFiltersArray={setfiltersSelectedArray}
-                  FiltersArray={FiltersSelectedArrayRef.current}
-                  SetNotIncludeFilter={setNotIncludeFilter}
-                  NotIncludeFilter={NotIncludeFilterRef.current}
-                  Reset={ResetRef.current}
+                  key={index}
+                  styles={styles?.SelectStyle}
+                  optionName={item?.name?.toUpperCase()}
+                  options={item?.value}
+                  setFiltersArray={setFiltersArray}
+                  FiltersArray={FiltersArrayRef.current}
+                  Reset={reset}
+                  ArrayNumber={addfilterRef.current}
+                  setArrayNumber={setaddfilter}
                 />
-              ) : null
-            )}
+              );
+            })}
           </Filter>
         </FiltersDiv>
       </Sidebar>
       <ListDiv>
-        {RenderContentRef.current.length !== 1 &&
-          RenderContentRef.current.map((item, idx) => (
-            <TailwindCard
-              styles={styles?.CardStyle}
-              key={idx + 1}
-              name={item.name}
-              publisher={item.publisher}
-              subject={item.subject}
-              type={item.type}
-              tags={item.tags}
-              image={item.image}
-            />
-          ))}
+        {(RenderContentRef.current.length !== 0
+          ? RenderContent
+          : contentRef.current
+        ).map((item, idx) => (
+          <Card
+            styles={styles?.CardStyle}
+            key={idx + 1}
+            name={item.name}
+            publisher={item.publisher}
+            subject={item.subject}
+            type={item.type}
+            tags={item.tags}
+            image={item?.appIcon}
+          />
+        ))}
       </ListDiv>
     </MainDiv>
   );

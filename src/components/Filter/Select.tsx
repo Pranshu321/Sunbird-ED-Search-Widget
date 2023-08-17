@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React,{ useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { TiTick } from 'react-icons/ti';
 
@@ -16,15 +16,14 @@ export interface SelectProps {
     select?: {};
     OptionsItem?: {};
   };
-  FiltersArray?: Array<FiltersArraySelectedOptionObject>;
+  FiltersArray: Array<FiltersArraySelectedOptionObject>;
   setFiltersArray: (...args: any[]) => any;
   options: Array<string>;
   optionName: string;
   filters?: Array<string>;
-  SetNotIncludeFilter: (...args: any[]) => any;
-  currentidx?: number;
-  NotIncludeFilter: Array<number>;
   Reset?: boolean;
+  ArrayNumber: Array<number>;
+  setArrayNumber: (...args: any[]) => any;
 }
 
 const size = {
@@ -39,7 +38,7 @@ export const SelectDiv = styled.div<{ filterarray: boolean }>`
   align-items: center;
   padding: ${(props: any) => (props?.filterarray ? '4px 4px' : '8px 8px')};
   border-radius: 15px;
-  min-width: 15rem;
+  width: 15rem;
   /* max-width: max-content; */
   overflow-x: scroll;
    &::-webkit-scrollbar{
@@ -103,9 +102,9 @@ export const Select = ({
   optionName,
   FiltersArray,
   setFiltersArray,
-  SetNotIncludeFilter,
-  NotIncludeFilter,
   Reset,
+  ArrayNumber,
+  setArrayNumber
 }: SelectProps) => {
   const [show, setshow] = useState(false);
   const [selected, setSelected] = useState<Array<string>>([]);
@@ -116,58 +115,89 @@ export const Select = ({
       const newarr = selected.filter(item => {
         return item !== option;
       });
-      console.log('Yes');
-
       setSelected(newarr);
     }
   };
   // console.log("Check", FiltersSelectedArrayRef.current);
 
-  function checkIfPresent(option: string) {
-    let val: boolean = false;
-    FiltersArray?.map((item, idx) => {
-      if (item.value.includes(option)) {
-        NotIncludeFilterIndexAdd(idx);
-        val = true;
-      }
-    });
-    return val;
-  }
+  // function checkIfPresent(option: string) {
+  //     let val: boolean = false;
+  //     FiltersArray?.map((item, idx) => {
+  //         if (item.value.includes(option)) {
+  //             NotIncludeFilterIndexAdd(idx);
+  //             val = true;
+  //         }
+  //     });
+  //     return val;
+  // }
 
-  const NotIncludeFilterIndexAdd = (idx: number) => {
-    SetNotIncludeFilter([...NotIncludeFilter, idx]);
-    if (NotIncludeFilter.indexOf(idx) !== -1) {
-      const newarr = NotIncludeFilter.filter(item => {
-        return item !== idx;
+  // const NotIncludeFilterIndexAdd = (idx: number) => {
+  //     SetNotIncludeFilter([...NotIncludeFilter, idx]);
+  //     if (NotIncludeFilter.indexOf(idx) !== -1) {
+  //         const newarr = NotIncludeFilter.filter(item => {
+  //             return item !== idx;
+  //         });
+  //         // console.log("Yes");
+
+  //         SetNotIncludeFilter(newarr);
+  //     }
+  // };
+
+  const FiltersArrayAddition = (optionname: string, option: string) => {
+    // FiltersArray?.map(item => {
+    //     if (checkIfPresent(option)) {
+    //         return FiltersArray;
+    //     }
+    //     if (checkIfPresent(optionName)) {
+    //         console.log(optionName);
+    //         const it = item;
+    //         it.value = [...it.value, option];
+    //         const temp = FiltersArray.filter(item => {
+    //             item.name !== optionName;
+    //         });
+    //         setFiltersArray([...temp, it]);
+    //     } else {
+    //         setFiltersArray([
+    //             ...FiltersArray,
+    //             { name: optionName, value: [option] },
+    //         ]);
+    //     }
+    //     return FiltersArray;
+    // });
+    // console.log(optionname, option);
+    if (CheckIfOptionPresent(optionname)) {
+      FiltersArray?.map(item => {
+        if (CheckIfOptionPresent(optionname)) {
+          if (item.value.includes(option)) {
+            const newarr = item.value;
+            const indexofOption = item.value.indexOf(option);
+            newarr.splice(indexofOption, 1);
+            item.value = newarr;
+            return;
+          }
+          if (!(item.value.includes(option))) {
+            let oldArr = item.value;
+            oldArr.push(option);
+            item.value = oldArr;
+          }
+        }
       });
-      // console.log("Yes");
-
-      SetNotIncludeFilter(newarr);
     }
+    else {
+      setFiltersArray([...FiltersArray, { name: optionname, value: [option] }]);
+    }
+    setArrayNumber([...ArrayNumber, 2]);
   };
 
-  const FiltersArrayAddition = (option: string) => {
-    FiltersArray?.map(item => {
-      if (checkIfPresent(option)) {
-        return FiltersArray;
+  function CheckIfOptionPresent(optionName: string) {
+    let flag = false;
+    FiltersArray?.map((item) => {
+      if (item.name === optionName) {
+        flag = true;
       }
-      if (checkIfPresent(optionName)) {
-        console.log(optionName);
-        const it = item;
-        it.value = [...it.value, option];
-        const temp = FiltersArray.filter(item => {
-          item.name !== optionName;
-        });
-        setFiltersArray([...temp, it]);
-      } else {
-        setFiltersArray([
-          ...FiltersArray,
-          { name: optionName, value: [option] },
-        ]);
-      }
-      return FiltersArray;
     });
-  };
+    return flag;
+  }
 
   useEffect(() => {
     setSelected([]);
@@ -203,10 +233,10 @@ export const Select = ({
           {selected.length === 0
             ? 'Select'
             : selected.map((item, idx) => (
-                <Text style={styles?.OptionStyle} key={idx + 1}>
-                  {item}
-                </Text>
-              ))}
+              <Text style={styles?.OptionStyle} key={idx + 1}>
+                {item}
+              </Text>
+            ))}
         </SelectDiv>
         <div>
           <OptionsDiv
@@ -221,7 +251,7 @@ export const Select = ({
                 key={idx + 1}
                 onClick={() => {
                   FilterAdd(option);
-                  FiltersArrayAddition(option);
+                  FiltersArrayAddition(optionName, option);
                 }}
               >
                 <Text style={{ cursor: 'pointer', ...styles?.OptionsItem }}>

@@ -158,7 +158,7 @@ const DetailDesc = styled.dd`
   color: #6b7280;
 `;
 
-export const TailwindCard = ({
+export const Card = ({
   name,
   image,
   type,
