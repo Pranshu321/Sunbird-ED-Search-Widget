@@ -1,4 +1,4 @@
-import React,{ useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { TiTick } from 'react-icons/ti';
 
@@ -165,9 +165,9 @@ export const Select = ({
     //     return FiltersArray;
     // });
     // console.log(optionname, option);
-    if (CheckIfOptionPresent(optionname)) {
+    if (CheckIfOptionPresentNew(optionname)) {
       FiltersArray?.map(item => {
-        if (CheckIfOptionPresent(optionname)) {
+        if (CheckIfOptionPresent(optionname, item)) {
           if (item.value.includes(option)) {
             const newarr = item.value;
             const indexofOption = item.value.indexOf(option);
@@ -189,7 +189,16 @@ export const Select = ({
     setArrayNumber([...ArrayNumber, 2]);
   };
 
-  function CheckIfOptionPresent(optionName: string) {
+  function CheckIfOptionPresent(optionName: string, itemarg: any) {
+    let flag = false;
+    FiltersArray?.map((item) => {
+      if (item.name === optionName && item.name === itemarg.name) {
+        flag = true;
+      }
+    });
+    return flag;
+  }
+  function CheckIfOptionPresentNew(optionName: string) {
     let flag = false;
     FiltersArray?.map((item) => {
       if (item.name === optionName) {

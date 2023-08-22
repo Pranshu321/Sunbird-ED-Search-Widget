@@ -8,6 +8,7 @@ import { Card } from "../card/Card";
 import {
   CardFieldsRender,
   FilterDataExtract,
+  MasterFieldContentChange,
   RenderContentFunction,
   TermsFetch,
   UpdateConfig,
@@ -136,7 +137,12 @@ interface ApiContextProps {
   headers?: {};
   body?: string;
   Formurl: string;
-  Contenturl: string;
+  ContentFetchObj: {
+    url: string,
+    method: string,
+    headers?: object,
+    body: string
+  };
   CardFieldsProps: CardFieldsObject;
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   cache:
@@ -156,7 +162,7 @@ export const ApiContext = ({
   headers,
   body,
   Formurl,
-  Contenturl,
+  ContentFetchObj,
   method,
   cache,
   styles,
@@ -191,6 +197,9 @@ export const ApiContext = ({
   // Resetting the filters
   const [reset, setReset] = useState<boolean>(false);
 
+  // Filters Set and API Call
+  const [FiltersSet, setFiltersSet, FiltersSetRef] = useState<any>(ContentFetchObj.body);
+
   // Adding The Filters
   const [addfilter, setaddfilter, addfilterRef] = useState<Array<number>>([]);
 
@@ -215,7 +224,8 @@ export const ApiContext = ({
       filtersOptionData,
       filterConfigState,
       MasterFieldsTerms,
-      MasterKeys
+      MasterKeys,
+      FiltersSet
     );
   }
 
@@ -241,16 +251,19 @@ export const ApiContext = ({
       .catch((err: any) => {
         console.log(err);
       });
+    // console.log(ContentFetchObj);
+    // console.log(filterConfig);
 
     fetchData({
-      url: Contenturl,
-      cache,
-      method,
-      body,
-      headers,
+      url: ContentFetchObj.url,
+      cache: "default",
+      method: ContentFetchObj.method,
+      body: ContentFetchObj.body,
+      headers: ContentFetchObj.headers
     })
       .then((res) => {
-        setcontent(res);
+        // console.log("Res", res);
+        setcontent(res.result.content);
         FilterDataRender();
       })
       .catch((err) => {
@@ -265,8 +278,9 @@ export const ApiContext = ({
       headers,
     })
       .then((res) => {
+        // console.log(res);
         TermsFetch(res, setMasterFieldsTerms, filterConfigRef.current);
-        // console.log(MasterFieldsTermsRef.current);
+        // console.log(MasterFieldsTermsRef.current[0]);
         setMasterKeys(Object.keys(MasterFieldsTermsRef.current[0]));
       })
       .catch((err) => {
@@ -274,7 +288,29 @@ export const ApiContext = ({
       });
   }
 
-  console.log(FiltersArrayRef.current);
+  // function NewContentAfterMasterFieldSet(){
+  useEffect(() => {
+    fetchData({
+      url: ContentFetchObj.url,
+      cache: "default",
+      method: ContentFetchObj.method,
+      body: FiltersSetRef.current,
+      headers: ContentFetchObj.headers
+    })
+      .then((res) => {
+        setcontent(res.result.content);
+        // FilterDataRender();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // console.log("Yes");
+  }, [FiltersSetRef.current]);
+  // }
+
+  useEffect(() => {
+    MasterFieldContentChange(FiltersArrayRef.current, filterConfig, ContentFetchObj.body, setFiltersSet);
+  }, [addfilterRef.current]);
 
   function FilterDataRender() {
     // optionName wali field
@@ -284,13 +320,14 @@ export const ApiContext = ({
       filterConfig: filterConfigRef.current,
       TermsObject: MasterFieldsTermsRef.current,
     });
+    // console.log("ReturnData",ReturnData);
+
     setFiltersOptionData(ReturnData.OptionValueArray);
   }
 
   useEffect(() => {
     setFiltersArray([]);
   }, [reset]);
-
   useEffect(() => {
     RenderContentFunction({
       content: contentRef.current,
@@ -304,6 +341,7 @@ export const ApiContext = ({
   useEffect(() => {
     FetchAndUpdateFilterConfig();
   }, []);
+  console.log(MasterKeysRef.current);
 
   return (
     <MainDiv style={styles?.apiContextDiv}>
@@ -334,7 +372,7 @@ export const ApiContext = ({
               const item: any = FiltersOptionRef.current.filter(
                 (filter: any) => filter?.name === name
               )[0];
-              if (item !== null && item !== undefined){
+              if (item !== null && item !== undefined)
                 return (
                   <Select
                     key={index}
@@ -347,10 +385,7 @@ export const ApiContext = ({
                     setArrayNumber={setaddfilter}
                   />
                 );
-              }
-              else{
-                return null;
-              }
+              return null;
             })}
           </Filter>
         </FiltersDiv>
