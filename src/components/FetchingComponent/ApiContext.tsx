@@ -4,13 +4,14 @@ import useState from "react-usestateref";
 import { Filter } from "../Filter";
 import { Select } from "../Filter/Select";
 import { styled } from "styled-components";
+import { Card } from "../card/Card";
 import {
   CardFieldsRender,
   FilterDataExtract,
   RenderContentFunction,
+  TermsFetch,
   UpdateConfig,
 } from "../../api/Service_Function";
-import { Card } from "../card/Card";
 
 interface StyleProps {
   apiContextDiv: {};
@@ -99,36 +100,36 @@ interface FilterConfigProps {
 // interface CardConfigProps {
 //   name: "image" | "type" | "subject" | "name" | "publisher" | "tags";
 //   TagsFieldArray?: Array<string>;
-//   field?: string,
-//   isEnabled?: boolean
+//   field?: string;
+//   isEnabled?: boolean;
 // }
 
 type CardFieldsObject = {
   name?: {
-    field: string,
-    isEnabled?: boolean
-  },
+    field: string;
+    isEnabled?: boolean;
+  };
   type?: {
-    field: string,
-    isEnabled?: boolean
-  },
+    field: string;
+    isEnabled?: boolean;
+  };
   subject?: {
-    field: string,
-    isEnabled?: boolean
-  },
+    field: string;
+    isEnabled?: boolean;
+  };
   image?: {
-    field: string,
-    isEnabled?: boolean
-  },
+    field: string;
+    isEnabled?: boolean;
+  };
   publisher?: {
-    field: string,
-    isEnabled?: boolean
-  },
+    field: string;
+    isEnabled?: boolean;
+  };
   tags?: {
-    TagsFieldArray: Array<string>
-    isEnabled?: boolean
-  }
-}
+    TagsFieldArray: Array<string>;
+    isEnabled?: boolean;
+  };
+};
 
 interface ApiContextProps {
   children?: ReactNode;
@@ -148,6 +149,7 @@ interface ApiContextProps {
   styles?: StyleProps;
   filterConfig: Array<FilterConfigProps>;
   addtionalFilterConfig?: Array<FilterConfigProps> | undefined;
+  Termsurl: string;
 }
 export const ApiContext = ({
   children,
@@ -159,8 +161,9 @@ export const ApiContext = ({
   cache,
   styles,
   filterConfig,
+  Termsurl,
   addtionalFilterConfig,
-  CardFieldsProps
+  CardFieldsProps,
 }: ApiContextProps) => {
   // Content or Data
   const [content, setcontent, contentRef] = useState<Array<object>>([]);
@@ -192,13 +195,29 @@ export const ApiContext = ({
   const [addfilter, setaddfilter, addfilterRef] = useState<Array<number>>([]);
 
   // RenderContent
-  const [RenderContent, setRenderContent, RenderContentRef] = useState<Array<any>>([]);
+  const [RenderContent, setRenderContent, RenderContentRef] = useState<
+    Array<any>
+  >([]);
+
+  // MasterFieldsTerms
+  const [MasterFieldsTerms, setMasterFieldsTerms, MasterFieldsTermsRef] =
+    useState<Array<object>>([{}]);
+  const [MasterKeys, setMasterKeys, MasterKeysRef] = useState<Array<string>>(
+    []
+  );
 
   const check = false;
   if (check) {
-    console.log(addfilter, FiltersArray, content, filtersOptionData, filterConfigState);
+    console.log(
+      addfilter,
+      FiltersArray,
+      content,
+      filtersOptionData,
+      filterConfigState,
+      MasterFieldsTerms,
+      MasterKeys
+    );
   }
-
 
   function FetchAndUpdateFilterConfig() {
     fetchData({
@@ -237,7 +256,25 @@ export const ApiContext = ({
       .catch((err) => {
         console.log(err);
       });
+
+    fetchData({
+      url: Termsurl,
+      cache,
+      method,
+      body,
+      headers,
+    })
+      .then((res) => {
+        TermsFetch(res, setMasterFieldsTerms, filterConfigRef.current);
+        // console.log(MasterFieldsTermsRef.current);
+        setMasterKeys(Object.keys(MasterFieldsTermsRef.current[0]));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
+
+  console.log(FiltersArrayRef.current);
 
   function FilterDataRender() {
     // optionName wali field
@@ -245,6 +282,7 @@ export const ApiContext = ({
     const ReturnData = FilterDataExtract({
       content: contentRef.current,
       filterConfig: filterConfigRef.current,
+      TermsObject: MasterFieldsTermsRef.current,
     });
     setFiltersOptionData(ReturnData.OptionValueArray);
   }
@@ -275,12 +313,14 @@ export const ApiContext = ({
         <FiltersDiv showfilter={showFilter}>
           <Filter>
             <ResetButton onClick={() => setReset(!reset)}>Reset</ResetButton>
-            {FiltersOptionRef.current?.map((item: any, index) => {
+            {MasterKeysRef.current?.map((MasterField: any, index) => {
+              const item: any =
+                MasterFieldsTermsRef.current[0][MasterField as keyof {}];
               return (
                 <Select
                   key={index}
                   optionName={item?.name?.toUpperCase()}
-                  options={item?.value}
+                  options={item?.terms.sort()}
                   setFiltersArray={setFiltersArray}
                   FiltersArray={FiltersArrayRef.current}
                   Reset={reset}
@@ -289,11 +329,37 @@ export const ApiContext = ({
                 />
               );
             })}
+            {addtionalFilterConfig?.map((addtionalFilter: any, index) => {
+              const name = addtionalFilter?.name;
+              const item: any = FiltersOptionRef.current.filter(
+                (filter: any) => filter?.name === name
+              )[0];
+              if (item !== null && item !== undefined){
+                return (
+                  <Select
+                    key={index}
+                    optionName={item?.name.toUpperCase()}
+                    options={item?.value}
+                    setFiltersArray={setFiltersArray}
+                    FiltersArray={FiltersArrayRef.current}
+                    Reset={reset}
+                    ArrayNumber={addfilterRef.current}
+                    setArrayNumber={setaddfilter}
+                  />
+                );
+              }
+              else{
+                return null;
+              }
+            })}
           </Filter>
         </FiltersDiv>
       </Sidebar>
       <ListDiv>
-        {(RenderContentRef.current.length !== 0 ? RenderContent : contentRef.current).map((item, idx) => {
+        {(RenderContentRef.current.length !== 0
+          ? RenderContent
+          : contentRef.current
+        ).map((item, idx) => {
           const DataObj = CardFieldsRender(item, CardFieldsProps);
           return (
             <Card
