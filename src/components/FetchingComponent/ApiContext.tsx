@@ -11,6 +11,7 @@ import {
   MasterFieldContentChange,
   RenderContentFunction,
   TermsFetch,
+  DependentTermsFetch,
   UpdateConfig,
 } from "../../api/Service_Function";
 
@@ -251,8 +252,6 @@ export const ApiContext = ({
       .catch((err: any) => {
         console.log(err);
       });
-    // console.log(ContentFetchObj);
-    // console.log(filterConfig);
 
     fetchData({
       url: ContentFetchObj.url,
@@ -262,7 +261,6 @@ export const ApiContext = ({
       headers: ContentFetchObj.headers
     })
       .then((res) => {
-        // console.log("Res", res);
         setcontent(res.result.content);
         FilterDataRender();
       })
@@ -278,9 +276,7 @@ export const ApiContext = ({
       headers,
     })
       .then((res) => {
-        // console.log(res);
         TermsFetch(res, setMasterFieldsTerms, filterConfigRef.current);
-        // console.log(MasterFieldsTermsRef.current[0]);
         setMasterKeys(Object.keys(MasterFieldsTermsRef.current[0]));
       })
       .catch((err) => {
@@ -288,7 +284,54 @@ export const ApiContext = ({
       });
   }
 
-  // function NewContentAfterMasterFieldSet(){
+
+  useEffect(() => {
+    fetchData({
+      url: Termsurl,
+      cache,
+      method,
+      body,
+      headers,
+    })
+      .then((res) => {
+        const data = DependentTermsFetch(res, FiltersArrayRef.current, MasterFieldsTermsRef.current);
+        let flag = false;
+        FiltersArrayRef.current.map((item: any) => {
+          if (item?.value.length === 0) {
+            flag = true;
+          }
+          else {
+            flag = false;
+          }
+        });
+        if (flag) {
+          fetchData({
+            url: Termsurl,
+            cache,
+            method,
+            body,
+            headers,
+          })
+            .then((res) => {
+              // console.log(res);
+              TermsFetch(res, setMasterFieldsTerms, filterConfigRef.current);
+              // console.log(MasterFieldsTermsRef.current[0]);
+              setMasterKeys(Object.keys(MasterFieldsTermsRef.current[0]));
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+        else {
+
+          setMasterFieldsTerms(data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [addfilterRef.current])
+
   useEffect(() => {
     fetchData({
       url: ContentFetchObj.url,
@@ -299,14 +342,11 @@ export const ApiContext = ({
     })
       .then((res) => {
         setcontent(res.result.content);
-        // FilterDataRender();
       })
       .catch((err) => {
         console.log(err);
       });
-    // console.log("Yes");
   }, [FiltersSetRef.current]);
-  // }
 
   useEffect(() => {
     MasterFieldContentChange(FiltersArrayRef.current, filterConfig, ContentFetchObj.body, setFiltersSet);
@@ -320,7 +360,6 @@ export const ApiContext = ({
       filterConfig: filterConfigRef.current,
       TermsObject: MasterFieldsTermsRef.current,
     });
-    // console.log("ReturnData",ReturnData);
 
     setFiltersOptionData(ReturnData.OptionValueArray);
   }
@@ -341,7 +380,6 @@ export const ApiContext = ({
   useEffect(() => {
     FetchAndUpdateFilterConfig();
   }, []);
-  console.log(MasterKeysRef.current);
 
   return (
     <MainDiv style={styles?.apiContextDiv}>
@@ -353,7 +391,7 @@ export const ApiContext = ({
             <ResetButton onClick={() => setReset(!reset)}>Reset</ResetButton>
             {MasterKeysRef.current?.map((MasterField: any, index) => {
               const item: any =
-                MasterFieldsTermsRef.current[0][MasterField as keyof {}];
+                MasterFieldsTermsRef?.current[0][MasterField as keyof {}];
               return (
                 <Select
                   key={index}
@@ -385,7 +423,7 @@ export const ApiContext = ({
                     setArrayNumber={setaddfilter}
                   />
                 );
-              return null;
+              else return null;
             })}
           </Filter>
         </FiltersDiv>
@@ -394,7 +432,7 @@ export const ApiContext = ({
         {(RenderContentRef.current.length !== 0
           ? RenderContent
           : contentRef.current
-        ).map((item, idx) => {
+        )?.map((item, idx) => {
           const DataObj = CardFieldsRender(item, CardFieldsProps);
           return (
             <Card

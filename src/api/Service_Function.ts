@@ -196,7 +196,6 @@ export function UpdateConfig({
       };
     });
   }
-  // console.log("Temp Data" , TempData);
   setFilterConfig(TempData);
   return TempData;
 }
@@ -217,27 +216,22 @@ export function FilterDataExtract({
   filterConfig,
   TermsObject,
 }: FilterDataExtractProps) {
-  const AddtionalFieldsObject = filterConfig[0].data.additionalFields;
-  const MasterFieldsObject = filterConfig[0].data.PrimaryFields;
+  const AddtionalFieldsObject = filterConfig[0]?.data.additionalFields;
   const FilterConfigObject = {
-    ...MasterFieldsObject,
     ...AddtionalFieldsObject,
   };
   let OptionNameArray: any = [];
   let OptionValueArray: any = [];
   if (filterConfig.length !== 0) {
-    const MasterKeys = Object.keys(filterConfig[0].data.PrimaryFields);
-    const AddtionalKeys = Object.keys(filterConfig[0].data.additionalFields);
-    OptionNameArray = [...MasterKeys, ...AddtionalKeys];
+    const AddtionalKeys = Object.keys(filterConfig[0]?.data.additionalFields);
+    OptionNameArray = [...AddtionalKeys];
     OptionNameArray?.map((item: any) => {
       if (isEnabled(FilterConfigObject, item)) {
         let temp: any;
         if (TermsObject.hasOwnProperty(item)) {
           temp = TermsObject[item];
         } else {
-          let fieldName = MasterFieldsObject[item]
-            ? MasterFieldsObject[item].field
-            : AddtionalFieldsObject[item]?.field;
+          let fieldName = AddtionalFieldsObject[item]?.field;
 
           temp = new Set("");
 
@@ -275,8 +269,6 @@ export function FilterDataExtract({
       }
     });
   }
-  // console.log("OptionValue",OptionValueArray);
-
   return {
     OptionNameArray,
     OptionValueArray,
@@ -290,15 +282,13 @@ export function RenderContentFunction({
   setRenderContentData,
 }: RenderContentProps) {
   const AddtionalFieldsObject = filterConfig[0]?.data.additionalFields;
-  // const MasterFieldsObject = filterConfig[0]?.data.PrimaryFields;
   const FilterConfigObject = {
-    // ...MasterFieldsObject,
     ...AddtionalFieldsObject,
   };
   const keys = Object.keys(FilterConfigObject);
   let contentArray: Array<any> = [];
   const tempContent = content;
-  filtersSelected.map((item: any) => {
+  filtersSelected?.map((item: any) => {
     const itemName = item.name;
     const filterSelectedArray = item.value;
     const fieldKey = keys.filter((item) => {
@@ -306,7 +296,7 @@ export function RenderContentFunction({
     });
     const fieldObj = FilterConfigObject[fieldKey[0]];
     const field = fieldObj?.field;
-    tempContent.map((item: any) => {
+    tempContent?.map((item: any) => {
       if (item[field] !== undefined) {
         filterSelectedArray.map((ele: any) => {
           if (item[field].includes(ele)) {
@@ -346,7 +336,6 @@ export function CardFieldsRender(item: any, CardFieldsObject: any) {
     }
   });
   ObjectReturn["tags"] = tagsArray;
-  // console.log("Object", ObjectReturn);
   return ObjectReturn;
 }
 
@@ -356,19 +345,13 @@ export function TermsFetch(
   FilterConfig?: any
 ) {
   const Categories = data.result.framework.categories;
-  // console.log("Categories", Categories);
   const TermsObject: any = {};
-  console.log("FilterConfig", FilterConfig[0]);
   Categories.map((item: any) => {
-    // const code = item.code;
     const name = item.name;
-    // console.log(FilterConfig[0].data.PrimaryFields[name]?.isEnabled);
-    if (FilterConfig[0].data.PrimaryFields[name]?.isEnabled){
-      // console.log("code", name);
+    if (FilterConfig[0].data.PrimaryFields[name]?.isEnabled) {
       const associations = item.terms[0].associations
         ? item.terms[0].associations
         : item.terms;
-      // const TermsArr: Array<string> = [];
       associations.map((item: any) => {
         if (TermsObject.hasOwnProperty(item.category)) {
           let tempArr = TermsObject[item.category as keyof any].terms;
@@ -376,18 +359,14 @@ export function TermsFetch(
           const newSet = new Set(tempArr);
           TermsObject[item.category as keyof any].terms = [...newSet];
         } else {
-          // console.log("item" , item.category);
           TermsObject[item.category as keyof any] = {
             name: item.category,
             terms: [item.name],
           };
         }
       });
-      // TermsObject[code] = { name: name, terms: TermsArr };
-      console.log(TermsObject);
     }
   });
-  // console.log("TermsObject", TermsObject);
   setMasterFieldsTerms([TermsObject]);
 }
 
@@ -398,20 +377,14 @@ export function MasterFieldContentChange(
   setFilter: Function
 ) {
   const bodyJSON = JSON.parse(body);
-  // console.log(filterConfig);
-  // console.log(filtersArray);
   const TempObj: any = {};
-  console.log("config",filterConfig);
 
   filtersArray.map((item: any) => {
     const itemName = item.name.toLowerCase();
-    console.log("dsf",itemName);
     const configfiled = filterConfig.filter((fil: any) => {
-      console.log("FIll NAme" , fil);
       return fil.name.toLowerCase() === itemName;
     });
     TempObj[configfiled[0]?.field] = item.value;
-    // console.log(TempObj);
   });
   const keys = Object.keys(bodyJSON.request.filters);
   keys.map((item: any) => {
@@ -419,6 +392,36 @@ export function MasterFieldContentChange(
       bodyJSON.request.filters[item] = TempObj[item];
     }
   });
-  console.log((bodyJSON));  
   setFilter(JSON.stringify(bodyJSON));
+}
+
+export function DependentTermsFetch(thing: any, filters: any, filterOptions: any) {
+  let obj: any = {};
+  thing.result.framework.categories?.map((item: any) => {
+    filters.map((filter: any) => {
+      if (item.code.toLowerCase() === filter.name.toLowerCase()) {
+        const arr = filter.value;
+        item.terms.map((item: any) => {
+          if (arr.includes(item.name)) {
+            item.associations.map((item: any) => {
+              if (obj[item.category] === undefined) {
+                obj[item.category] = [item.name];
+              } else {
+                obj[item.category] = Array.from(
+                  new Set(obj[item.category].concat(item.name))
+                ).sort();
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+  const Keys = Object.keys(filterOptions[0]);
+  Keys.map((item: any) => {
+    if (obj.hasOwnProperty(item)) {
+      filterOptions[0][item].terms = obj[item];
+    }
+  });
+  return filterOptions;
 }
