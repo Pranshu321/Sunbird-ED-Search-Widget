@@ -1,4 +1,6 @@
-import React,{ styled } from 'styled-components';
+import React from 'react';
+import { styled } from 'styled-components';
+
 
 export interface TailwindCardProps {
   name: string;
@@ -29,6 +31,7 @@ const Container = styled.div`
   padding: 1rem;
   border-radius: 0.5rem;
   border-width: 1px;
+  /* max-height: max-content; */
   border-color: gray;
   border-bottom-width: 0.5rem;
   border-bottom-color: #a7f3d0;
@@ -46,7 +49,8 @@ const Container = styled.div`
     margin-top: 0;
     margin-bottom: 0;
     width: 21rem;
-    height: 11.5rem;
+    max-height: fit-content;
+    min-height: 11.5rem;
   }
   @media screen and (max-width: 500px) {
     width: 23rem;

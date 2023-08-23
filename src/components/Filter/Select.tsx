@@ -108,7 +108,7 @@ export const Select = ({
 }: SelectProps) => {
   const [show, setshow] = useState(false);
   const [selected, setSelected] = useState<Array<string>>([]);
-
+  console.log("Options", options);
   const FilterAdd = (option: string) => {
     setSelected([...selected, option]);
     if (selected.indexOf(option) !== -1) {

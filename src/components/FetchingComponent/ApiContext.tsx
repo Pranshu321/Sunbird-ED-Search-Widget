@@ -216,7 +216,7 @@ export const ApiContext = ({
     []
   );
 
-  const check = false;
+  const check = true;
   if (check) {
     console.log(
       addfilter,
@@ -226,7 +226,8 @@ export const ApiContext = ({
       filterConfigState,
       MasterFieldsTerms,
       MasterKeys,
-      FiltersSet
+      FiltersSet,
+      "Content Ref" , contentRef.current
     );
   }
 
@@ -351,6 +352,7 @@ export const ApiContext = ({
   useEffect(() => {
     MasterFieldContentChange(FiltersArrayRef.current, filterConfig, ContentFetchObj.body, setFiltersSet);
   }, [addfilterRef.current]);
+  
 
   function FilterDataRender() {
     // optionName wali field

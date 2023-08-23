@@ -172,7 +172,7 @@ export function UpdateConfig({
 }: UpdateConfigProps) {
   let TempData = apiData;
   if (filterConfig?.length !== 0) {
-    filterConfig?.map((item) => {
+    filterConfig?.map(item => {
       const ItemName = item.name;
       const ItemField = item.field;
       const ItemIsEnabled =
@@ -184,7 +184,7 @@ export function UpdateConfig({
     });
   }
   if (addtionalFilterConfig?.length !== 0) {
-    addtionalFilterConfig?.map((item) => {
+    addtionalFilterConfig?.map(item => {
       const ItemName = item.name;
       const ItemField = item.field;
       const ItemIsEnabled =
@@ -203,7 +203,7 @@ export function UpdateConfig({
 function isEnabled(filterConfig: any, itemName: string) {
   let isEnable = true;
   const Keys = Object.keys(filterConfig);
-  Keys.map((item) => {
+  Keys.map(item => {
     if (item.toLowerCase() === itemName.toLowerCase()) {
       isEnable = filterConfig[item].isEnabled;
     }
@@ -233,7 +233,7 @@ export function FilterDataExtract({
         } else {
           let fieldName = AddtionalFieldsObject[item]?.field;
 
-          temp = new Set("");
+          temp = new Set('');
 
           if (fieldName !== null || fieldName !== undefined) {
             content.map((item: any) => {
@@ -250,7 +250,7 @@ export function FilterDataExtract({
           }
         }
         if (Array.isArray(temp)) {
-          console.log("temp", temp.sort());
+          console.log('temp', temp.sort());
 
           if (temp.length !== 0)
             OptionValueArray.push({
@@ -291,7 +291,7 @@ export function RenderContentFunction({
   filtersSelected?.map((item: any) => {
     const itemName = item.name;
     const filterSelectedArray = item.value;
-    const fieldKey = keys.filter((item) => {
+    const fieldKey = keys.filter(item => {
       return item.toLowerCase() === itemName?.toLowerCase();
     });
     const fieldObj = FilterConfigObject[fieldKey[0]];
@@ -327,7 +327,7 @@ export function CardFieldsRender(item: any, CardFieldsObject: any) {
         item[CardFieldsObject[Field].field]
       );
     }
-    if (Field === "tags") {
+    if (Field === 'tags') {
       const TagsFieldsArray = CardFieldsObject[Field].TagsFieldArray;
       TagsFieldsArray.map((tagField: string) => {
         if (item.hasOwnProperty(tagField))
@@ -335,7 +335,7 @@ export function CardFieldsRender(item: any, CardFieldsObject: any) {
       });
     }
   });
-  ObjectReturn["tags"] = tagsArray;
+  ObjectReturn['tags'] = tagsArray;
   return ObjectReturn;
 }
 
@@ -357,7 +357,7 @@ export function TermsFetch(
           let tempArr = TermsObject[item.category as keyof any].terms;
           tempArr.push(item.name);
           const newSet = new Set(tempArr);
-          TermsObject[item.category as keyof any].terms = [...newSet];
+          TermsObject[item.category as keyof any].terms = Array.from(newSet);
         } else {
           TermsObject[item.category as keyof any] = {
             name: item.category,
@@ -395,7 +395,11 @@ export function MasterFieldContentChange(
   setFilter(JSON.stringify(bodyJSON));
 }
 
-export function DependentTermsFetch(thing: any, filters: any, filterOptions: any) {
+export function DependentTermsFetch(
+  thing: any,
+  filters: any,
+  filterOptions: any
+) {
   let obj: any = {};
   thing.result.framework.categories?.map((item: any) => {
     filters.map((filter: any) => {
@@ -407,9 +411,16 @@ export function DependentTermsFetch(thing: any, filters: any, filterOptions: any
               if (obj[item.category] === undefined) {
                 obj[item.category] = [item.name];
               } else {
-                obj[item.category] = Array.from(
-                  new Set(obj[item.category].concat(item.name))
-                ).sort();
+                // Concatenate the existing values with the new item's name
+                const concatenatedValues = obj[item.category].concat(item.name);
+
+                // Convert the concatenated values into a Set to remove duplicates
+                const uniqueValuesSet = new Set(concatenatedValues);
+
+                // Convert the Set back into an array using Array.from()
+                const uniqueValuesArray = Array.from(uniqueValuesSet);
+                
+                obj[item.category] = uniqueValuesArray.sort();
               }
             });
           }
