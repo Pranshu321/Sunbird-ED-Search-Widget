@@ -1,10 +1,6 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { styled } from 'styled-components';
-
-export interface FilterProps {
-  stylesFilterDiv?: {};
-  children: ReactNode;
-}
+import {FilterProps} from "../../interfaces/interface"
 
 const MainDiv = styled.div`
   background: #e9e8d9;

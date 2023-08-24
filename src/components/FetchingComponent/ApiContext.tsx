@@ -1,10 +1,11 @@
-import React, { ReactNode, useEffect } from "react";
-import { fetchData } from "../../api/api";
-import useState from "react-usestateref";
-import { Filter } from "../Filter";
-import { Select } from "../Filter/Select";
-import { styled } from "styled-components";
-import { Card } from "../card/Card";
+import React, { useEffect } from 'react';
+import { fetchData } from '../../api/api';
+import useState from 'react-usestateref';
+import { Filter } from '../Filter';
+import { Select } from '../Filter/Select';
+import { Card } from '../card/Card';
+import { Button, FiltersDiv, ListDiv, MainDiv, ResetButton, Sidebar } from "../styled-components/ContextElements"
+
 import {
   CardFieldsRender,
   FilterDataExtract,
@@ -13,151 +14,9 @@ import {
   TermsFetch,
   DependentTermsFetch,
   UpdateConfig,
-} from "../../api/Service_Function";
+} from '../../api/Service_Function';
+import { ApiContextProps } from '../../interfaces/interface';
 
-interface StyleProps {
-  apiContextDiv: {};
-  FilterComponent: {};
-  CardStyle: {};
-}
-
-const MainDiv = styled.div`
-  display: flex;
-  column-gap: 20px;
-  @media (max-width: 500px) {
-    display: flex;
-    flex-direction: column;
-    row-gap: 20px;
-    justify-content: center;
-    align-items: center;
-  }
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  border-radius: 15px;
-  background-color: #e9e8d9;
-  color: black;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  position: absolute;
-  left: 5px;
-  top: 10px;
-  width: 7rem;
-  display: none;
-  @media (max-width: 500px) {
-    display: block;
-  }
-`;
-
-const FiltersDiv = styled.div<{ showfilter: boolean }>`
-  height: max-content;
-  position: relative;
-  top: 10px;
-  left: 10px;
-  @media screen and (max-width: 500px) {
-    display: ${(props: any) => (props?.showfilter ? "none" : "block")};
-    position: absolute;
-    top: 55px;
-    left: 10px;
-  }
-`;
-
-const Sidebar = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const ListDiv = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  @media (max-width: 500px) {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 50px;
-  }
-`;
-
-const ResetButton = styled.button`
-  border: none;
-  color: black;
-  font-size: 15px;
-  font-weight: 700;
-  position: relative;
-  left: 104px;
-  cursor: pointer;
-  top: 10px;
-  background: transparent;
-`;
-
-interface FilterConfigProps {
-  name: string;
-  field: string;
-  isEnabled?: boolean;
-}
-
-// interface CardConfigProps {
-//   name: "image" | "type" | "subject" | "name" | "publisher" | "tags";
-//   TagsFieldArray?: Array<string>;
-//   field?: string;
-//   isEnabled?: boolean;
-// }
-
-type CardFieldsObject = {
-  name?: {
-    field: string;
-    isEnabled?: boolean;
-  };
-  type?: {
-    field: string;
-    isEnabled?: boolean;
-  };
-  subject?: {
-    field: string;
-    isEnabled?: boolean;
-  };
-  image?: {
-    field: string;
-    isEnabled?: boolean;
-  };
-  publisher?: {
-    field: string;
-    isEnabled?: boolean;
-  };
-  tags?: {
-    TagsFieldArray: Array<string>;
-    isEnabled?: boolean;
-  };
-};
-
-interface ApiContextProps {
-  children?: ReactNode;
-  headers?: {};
-  body?: string;
-  Formurl: string;
-  ContentFetchObj: {
-    url: string,
-    method: string,
-    headers?: object,
-    body: string
-  };
-  CardFieldsProps: CardFieldsObject;
-  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-  cache:
-  | "default"
-  | "no-store"
-  | "reload"
-  | "force-cache"
-  | "only-if-cached"
-  | "no-cache";
-  styles?: StyleProps;
-  filterConfig: Array<FilterConfigProps>;
-  addtionalFilterConfig?: Array<FilterConfigProps> | undefined;
-  Termsurl: string;
-}
 export const ApiContext = ({
   children,
   headers,
@@ -185,9 +44,16 @@ export const ApiContext = ({
     Array<object>
   >([{}]);
 
+  // Dependent Terms Data
+  const [
+    DependentTermsData,
+    setDependentTermsData,
+    DependentTermsRef,
+  ] = useState<Array<object>>([{}]);
+
   const [FiltersArray, setFiltersArray, FiltersArrayRef] = useState([
     {
-      name: "",
+      name: '',
       value: [],
     },
   ]);
@@ -199,7 +65,9 @@ export const ApiContext = ({
   const [reset, setReset] = useState<boolean>(false);
 
   // Filters Set and API Call
-  const [FiltersSet, setFiltersSet, FiltersSetRef] = useState<any>(ContentFetchObj.body);
+  const [FiltersSet, setFiltersSet, FiltersSetRef] = useState<any>(
+    ContentFetchObj.body
+  );
 
   // Adding The Filters
   const [addfilter, setaddfilter, addfilterRef] = useState<Array<number>>([]);
@@ -210,13 +78,16 @@ export const ApiContext = ({
   >([]);
 
   // MasterFieldsTerms
-  const [MasterFieldsTerms, setMasterFieldsTerms, MasterFieldsTermsRef] =
-    useState<Array<object>>([{}]);
+  const [
+    MasterFieldsTerms,
+    setMasterFieldsTerms,
+    MasterFieldsTermsRef,
+  ] = useState<Array<object>>([{}]);
   const [MasterKeys, setMasterKeys, MasterKeysRef] = useState<Array<string>>(
     []
   );
 
-  const check = true;
+  const check = false;
   if (check) {
     console.log(
       addfilter,
@@ -227,7 +98,7 @@ export const ApiContext = ({
       MasterFieldsTerms,
       MasterKeys,
       FiltersSet,
-      "Content Ref" , contentRef.current
+      DependentTermsData
     );
   }
 
@@ -256,16 +127,15 @@ export const ApiContext = ({
 
     fetchData({
       url: ContentFetchObj.url,
-      cache: "default",
+      cache: 'default',
       method: ContentFetchObj.method,
       body: ContentFetchObj.body,
-      headers: ContentFetchObj.headers
+      headers: ContentFetchObj.headers,
     })
-      .then((res) => {
+      .then(res => {
         setcontent(res.result.content);
-        FilterDataRender();
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
 
@@ -276,15 +146,14 @@ export const ApiContext = ({
       body,
       headers,
     })
-      .then((res) => {
+      .then(res => {
         TermsFetch(res, setMasterFieldsTerms, filterConfigRef.current);
         setMasterKeys(Object.keys(MasterFieldsTermsRef.current[0]));
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }
-
 
   useEffect(() => {
     fetchData({
@@ -294,17 +163,22 @@ export const ApiContext = ({
       body,
       headers,
     })
-      .then((res) => {
-        const data = DependentTermsFetch(res, FiltersArrayRef.current, MasterFieldsTermsRef.current);
-        let flag = false;
+      .then(res => {
+        const data = DependentTermsFetch(
+          res,
+          FiltersArrayRef.current,
+          MasterFieldsTermsRef.current
+        );
+        setDependentTermsData(data);
+        let flag = true;
+        console.log(FiltersArrayRef.current);
+
         FiltersArrayRef.current.map((item: any) => {
-          if (item?.value.length === 0) {
-            flag = true;
-          }
-          else {
+          if (item?.value.length !== 0) {
             flag = false;
           }
         });
+
         if (flag) {
           fetchData({
             url: Termsurl,
@@ -313,46 +187,50 @@ export const ApiContext = ({
             body,
             headers,
           })
-            .then((res) => {
+            .then(res => {
               // console.log(res);
               TermsFetch(res, setMasterFieldsTerms, filterConfigRef.current);
               // console.log(MasterFieldsTermsRef.current[0]);
               setMasterKeys(Object.keys(MasterFieldsTermsRef.current[0]));
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err);
             });
-        }
-        else {
-
-          setMasterFieldsTerms(data);
+        } else {
+          setMasterFieldsTerms(DependentTermsRef.current);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
-  }, [addfilterRef.current])
+  }, [addfilterRef.current]);
 
   useEffect(() => {
     fetchData({
       url: ContentFetchObj.url,
-      cache: "default",
+      cache: 'default',
       method: ContentFetchObj.method,
       body: FiltersSetRef.current,
-      headers: ContentFetchObj.headers
+      headers: ContentFetchObj.headers,
     })
-      .then((res) => {
+      .then(res => {
         setcontent(res.result.content);
+        FilterDataRender();
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, [FiltersSetRef.current]);
 
   useEffect(() => {
-    MasterFieldContentChange(FiltersArrayRef.current, filterConfig, ContentFetchObj.body, setFiltersSet);
+    MasterFieldContentChange(
+      FiltersArrayRef.current,
+      filterConfig,
+      ContentFetchObj.body,
+      setFiltersSet
+    );
+    FilterDataRender();
   }, [addfilterRef.current]);
-  
 
   function FilterDataRender() {
     // optionName wali field
@@ -394,6 +272,7 @@ export const ApiContext = ({
             {MasterKeysRef.current?.map((MasterField: any, index) => {
               const item: any =
                 MasterFieldsTermsRef?.current[0][MasterField as keyof {}];
+              // console.log(item?.terms.sort());
               return (
                 <Select
                   key={index}
@@ -440,12 +319,12 @@ export const ApiContext = ({
             <Card
               styles={styles?.CardStyle}
               key={idx + 1}
-              name={DataObj["name"] ? DataObj["name"] : ""}
-              publisher={DataObj["publisher"] ? DataObj["publisher"] : ""}
-              subject={DataObj["subject"] ? DataObj["subject"] : ""}
-              type={DataObj["type"] ? DataObj["type"] : ""}
-              tags={DataObj["tags"] ? DataObj["tags"] : []}
-              image={DataObj["image"] ? DataObj["image"] : ""}
+              name={DataObj['name'] ? DataObj['name'] : ''}
+              publisher={DataObj['publisher'] ? DataObj['publisher'] : ''}
+              subject={DataObj['subject'] ? DataObj['subject'] : ''}
+              type={DataObj['type'] ? DataObj['type'] : ''}
+              tags={DataObj['tags'] ? DataObj['tags'] : []}
+              image={DataObj['image'] ? DataObj['image'] : ''}
             />
           );
         })}

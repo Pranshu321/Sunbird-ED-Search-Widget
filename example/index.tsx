@@ -92,7 +92,7 @@ const App = () => {
         addtionalFilterConfig={[
           {
             name: "identifier",
-            field: "identifier",
+            field: "name",
             isEnabled: true
           }
         ]}

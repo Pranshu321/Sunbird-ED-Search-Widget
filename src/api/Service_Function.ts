@@ -1,169 +1,9 @@
-// interface FilterNameProps {
-//   filters: string[];
-// }
-
-// interface FiltersArraySelectedOptionObject {
-//   name: string;
-//   value: string[];
-// }
-
-// export interface CardProps {
-//   name: string;
-//   image: string;
-//   subject: '';
-//   type: string;
-//   publisher: string;
-//   tags: Array<string>;
-// }
-
-// interface ExtractFiltersDataProps {
-//   filters: string[];
-//   content: any;
-//   filterOptionData: {};
-//   setfilterData?: Function;
-// }
-
-// interface ContentFilterDataRenderProps {
-//   content: any;
-//   filtersSelectedArray: Array<FiltersArraySelectedOptionObject>;
-//   Filters: Array<string>;
-//   ApiSettedFilters: Array<string>;
-//   NotIncludeFilter: Array<number>;
-// }
-
-// export const FilterSingleString = ({
-//   filterString,
-// }: {
-//   filterString: string;
-// }) => {
-//   if (filterString?.length) {
-//     if (filterString?.includes('se_')) {
-//       return filterString.substring(3).toLocaleUpperCase();
-//     } else {
-//       return filterString.toLocaleUpperCase();
-//     }
-//   }
-//   return filterString.toLocaleUpperCase();
-// };
-
-// export const FiltersName = ({ filters }: FilterNameProps) => {
-//   let temp = [''];
-//   filters.map(filter => {
-//     if (filter.includes('se_')) {
-//       temp.push(filter.substring(3).toLocaleUpperCase());
-//     } else {
-//       temp.push(filter.toLocaleUpperCase());
-//     }
-//   });
-//   temp.splice(0, 1);
-//   return temp;
-// };
-
-// export const ExtractFiltersData = ({
-//   content,
-//   filters,
-//   filterOptionData,
-// }: ExtractFiltersDataProps) => {
-//   const obj: any = filterOptionData;
-//   filters.map(filter => {
-//     let temp = new Set('');
-//     content.map((item: any) => {
-//       if (item[filter] !== undefined) {
-//         if (Array.isArray(item[filter])) {
-//           item[filter].map((ele: string) => {
-//             temp.add(ele);
-//           });
-//         } else {
-//           temp.add(item[filter]);
-//         }
-//       }
-//       if (temp.size > 0) {
-//         obj[FilterSingleString({ filterString: filter })] = Array.from(temp);
-//       }
-//     });
-//   });
-//   return obj;
-// };
-
-// export const ContentFilterDataRender = ({
-//   content,
-//   filtersSelectedArray,
-//   ApiSettedFilters,
-//   Filters,
-//   NotIncludeFilter,
-// }: ContentFilterDataRenderProps) => {
-//   let RenderContent: Array<CardProps> = [
-//     {
-//       name: '',
-//       image: '',
-//       subject: '',
-//       type: '',
-//       publisher: '',
-//       tags: [],
-//     },
-//   ];
-//   filtersSelectedArray.map((item, idx) => {
-//     const val = item.value[0];
-//     const field = ApiSettedFilters[Filters.indexOf(item.name)];
-//     if (
-//       val !== undefined &&
-//       field !== undefined &&
-//       !NotIncludeFilter.includes(idx)
-//     )
-//       content.map((item: any) => {
-//         if (item[field] !== undefined && item[field].includes(val)) {
-//           const temp = {
-//             name: item.name,
-//             image: item.appIcon,
-//             subject: item['subject'][0],
-//             type: item.primaryCategory,
-//             publisher: item.board,
-//             tags: [
-//               item.board,
-//               item[ApiSettedFilters[1]][0],
-//               item[ApiSettedFilters[2]][0],
-//               `+${item[ApiSettedFilters[2]].length}`,
-//             ],
-//           };
-//           RenderContent.push(temp);
-//         }
-//       });
-//   });
-//   return RenderContent.slice(1);
-// };
-
-interface FilterConfigProps {
-  name: string;
-  field: string;
-  isEnabled?: boolean;
-}
-interface UpdateConfigProps {
-  apiData: Array<any>;
-  setFilterConfig: Function;
-  filterConfig: Array<FilterConfigProps> | undefined;
-  addtionalFilterConfig?: Array<FilterConfigProps> | undefined;
-}
-interface FilterDataExtractProps {
-  content: Array<object>;
-  filterConfig: Array<any>;
-  TermsObject: any;
-}
-export interface CardProps {
-  name?: string;
-  image?: string;
-  subject?: string;
-  type?: string;
-  publisher?: string;
-  tags?: Array<string>;
-}
-interface RenderContentProps {
-  content: Array<object>;
-  filtersSelected: Array<any>;
-  setRenderContentData: Function;
-  RenderContent: Array<CardProps>;
-  filterConfig: Array<any>;
-}
-
+import {
+  ServiceFunctionCardProps,
+  FilterDataExtractProps,
+  RenderContentProps,
+  UpdateConfigProps,
+} from '../interfaces/Service_Function_Interfaces';
 export function UpdateConfig({
   apiData,
   setFilterConfig,
@@ -319,11 +159,11 @@ function isArray(item: any) {
 
 export function CardFieldsRender(item: any, CardFieldsObject: any) {
   const FieldKeys = Object.keys(CardFieldsObject);
-  let ObjectReturn: CardProps = {};
+  let ObjectReturn: ServiceFunctionCardProps = {};
   let tagsArray: Array<string> = [];
   FieldKeys.map((Field: string) => {
     if (item.hasOwnProperty(CardFieldsObject[Field].field)) {
-      ObjectReturn[Field as keyof CardProps] = isArray(
+      ObjectReturn[Field as keyof ServiceFunctionCardProps] = isArray(
         item[CardFieldsObject[Field].field]
       );
     }
@@ -419,7 +259,7 @@ export function DependentTermsFetch(
 
                 // Convert the Set back into an array using Array.from()
                 const uniqueValuesArray = Array.from(uniqueValuesSet);
-                
+
                 obj[item.category] = uniqueValuesArray.sort();
               }
             });

@@ -1,16 +1,4 @@
-interface apiProps {
-  headers?: {};
-  body?: string;
-  url: string;
-  method: string;
-  cache:
-    | 'default'
-    | 'no-store'
-    | 'reload'
-    | 'force-cache'
-    | 'only-if-cached'
-    | 'no-cache';
-}
+import { apiProps } from "../interfaces/Service_Function_Interfaces";
 
 export const fetchData = async ({
   headers,
