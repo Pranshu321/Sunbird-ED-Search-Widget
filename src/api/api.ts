@@ -1,4 +1,4 @@
-import { apiProps } from "../interfaces/Service_Function_Interfaces";
+import { apiProps } from '../interfaces/Service_Function_Interfaces';
 
 export const fetchData = async ({
   headers,
@@ -16,7 +16,6 @@ export const fetchData = async ({
   if (!response.ok) {
     throw new Error('Something went wrong!');
   }
-  // console.log(await response.json());
 
   return response.json();
 };

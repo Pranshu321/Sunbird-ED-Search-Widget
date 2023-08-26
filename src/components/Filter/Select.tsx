@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { TiTick } from "react-icons/ti";
-import { SelectProps } from "../../interfaces/interface";
+import React, { useEffect, useState } from 'react';
+import { TiTick } from 'react-icons/ti';
+import { SelectProps } from '../../interfaces/interface';
 import {
   OptionTextDiv,
   OptionsDiv,
   SelectDiv,
   Text,
-} from "../styled-components/SelectElements";
+} from '../styled-components/SelectElements';
 
 export const Select = ({
   options,
@@ -24,7 +24,7 @@ export const Select = ({
   const FilterAdd = (option: string) => {
     setSelected([...selected, option]);
     if (selected.indexOf(option) !== -1) {
-      const newarr = selected.filter((item) => {
+      const newarr = selected.filter(item => {
         return item !== option;
       });
       setSelected(newarr);
@@ -33,7 +33,7 @@ export const Select = ({
 
   const FiltersArrayAddition = (optionname: string, option: string) => {
     if (CheckIfOptionPresentNew(optionname)) {
-      FiltersArray?.map((item) => {
+      FiltersArray?.map(item => {
         if (CheckIfOptionPresent(optionname, item)) {
           if (item.value.includes(option)) {
             const newarr = item.value;
@@ -57,7 +57,7 @@ export const Select = ({
 
   function CheckIfOptionPresent(optionName: string, itemarg: any) {
     let flag = false;
-    FiltersArray?.map((item) => {
+    FiltersArray?.map(item => {
       if (item.name === optionName && item.name === itemarg.name) {
         flag = true;
       }
@@ -66,7 +66,7 @@ export const Select = ({
   }
   function CheckIfOptionPresentNew(optionName: string) {
     let flag = false;
-    FiltersArray?.map((item) => {
+    FiltersArray?.map(item => {
       if (item.name === optionName) {
         flag = true;
       }
@@ -83,10 +83,10 @@ export const Select = ({
       <div style={styles?.container}>
         <h4
           style={{
-            color: "#000000",
-            marginBottom: "5px",
-            fontWeight: "600",
-            fontSize: "19px",
+            color: '#000000',
+            marginBottom: '5px',
+            fontWeight: '600',
+            fontSize: '19px',
             ...styles?.OptionNameStyle,
           }}
         >
@@ -98,17 +98,17 @@ export const Select = ({
           onClick={() => setshow(!show)}
         >
           {selected.length === 0
-            ? "Select"
+            ? 'Select'
             : selected.map((item, idx) => (
-              <Text style={styles?.OptionStyle} key={idx + 1}>
-                {item}
-              </Text>
-            ))}
+                <Text style={styles?.OptionStyle} key={idx + 1}>
+                  {item}
+                </Text>
+              ))}
         </SelectDiv>
         <div>
           <OptionsDiv
             style={{
-              display: `${show ? "flex" : "none"}`,
+              display: `${show ? 'flex' : 'none'}`,
               ...styles?.OptionDivStyle,
             }}
           >
@@ -121,7 +121,7 @@ export const Select = ({
                   FiltersArrayAddition(optionName, option);
                 }}
               >
-                <Text style={{ cursor: "pointer", ...styles?.OptionsItem }}>
+                <Text style={{ cursor: 'pointer', ...styles?.OptionsItem }}>
                   {option}
                 </Text>
                 {selected.indexOf(option) !== -1 && (

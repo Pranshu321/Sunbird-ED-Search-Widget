@@ -1,7 +1,8 @@
 import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { ApiContext } from '../.';
+import { Wrapper } from '../.';
+import { GetChannel, GetDefaultChannel, SearchAPI, TermsRead } from './AllAPI';
 
 const App = () => {
 
@@ -39,17 +40,32 @@ const App = () => {
 
   return (
     <>
-      <ApiContext
+      <Wrapper
         Formurl='http://localhost:3000/form'
-        ContentFetchObj={
-          {
-            url: "https://www.diksha.gov.in/api/content/v1/search?orgdetails=orgName,email&framework=ekstep_ncert_k-12",
-            method: Mockmethod,
-            body: mockBody,
-            headers: Mockheaders
-          }
-        }
-        Termsurl="http://localhost:3000/terms"
+        DefaultChannel={{
+          url: GetDefaultChannel.url,
+          method: GetDefaultChannel.requestOptions.method,
+          header: GetDefaultChannel.requestOptions.headers,
+          cache: "default"
+        }}
+        SearchAPI={{
+          url: SearchAPI.url,
+          body: SearchAPI.requestOptions.body,
+          headers: SearchAPI.requestOptions.headers,
+          method: SearchAPI.requestOptions.method
+        }}
+        GetChannel={{
+          header: GetChannel.requestOptions.headers,
+          cache: "default",
+          method: GetChannel.requestOptions.method
+        }}
+        TermsRead={{
+          url: TermsRead.url,
+          headers: TermsRead.requestOptions.headers,
+          method: TermsRead.requestOptions.method,
+          body: ""
+        }}
+        hostname='https://www.diksha.gov.in'
         CardFieldsProps={{
           name: {
             field: 'name',
@@ -96,8 +112,6 @@ const App = () => {
             isEnabled: true
           }
         ]}
-
-        method='GET'
       />
     </>
   );

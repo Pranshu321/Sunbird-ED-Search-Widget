@@ -1,4 +1,4 @@
-import { FilterConfigProps } from "./interface";
+import { FilterConfigProps } from './interface';
 
 export interface UpdateConfigProps {
   apiData: Array<any>;
@@ -30,7 +30,7 @@ export interface apiProps {
   headers?: {};
   body?: string;
   url: string;
-  method: string;
+  method?: string;
   cache:
     | 'default'
     | 'no-store'

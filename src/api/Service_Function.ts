@@ -276,3 +276,21 @@ export function DependentTermsFetch(
   });
   return filterOptions;
 }
+
+export function FrameworksOptionsRender(Frameworks: Array<any>) {
+  let options: Array<string> = [];
+  Frameworks?.map((item: any) => {
+    options.push(item.name);
+  });
+  return options;
+}
+
+export function GetFrameWorkID(Frameworks: Array<any>, Framework: string) {
+  let id: string = '';
+  Frameworks?.map((item: any) => {
+    if (item.name === Framework) {
+      id = item.identifier;
+    }
+  });
+  return id;
+}

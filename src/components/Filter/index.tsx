@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import {FilterProps} from "../../interfaces/interface"
+import { FilterProps } from '../../interfaces/interface';
 
 const MainDiv = styled.div`
   background: #e9e8d9;

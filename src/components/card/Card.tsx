@@ -1,6 +1,19 @@
 import React from 'react';
 import { CardProps } from '../../interfaces/interface';
-import { Container, DescType, DetailDesc, Image, ImageDiv, Link, LowerDiv, LowerItem, Tags, TagsDiv, TopContent, Type } from "../styled-components/CardElements"
+import {
+  Container,
+  DescType,
+  DetailDesc,
+  Image,
+  ImageDiv,
+  Link,
+  LowerDiv,
+  LowerItem,
+  Tags,
+  TagsDiv,
+  TopContent,
+  Type,
+} from '../styled-components/CardElements';
 
 export const Card = ({
   name,
@@ -41,18 +54,18 @@ export const Card = ({
             </TagsDiv>
           </div>
           <LowerDiv style={styles?.LowerDiv}>
-            {subject &&
+            {subject && (
               <LowerItem style={styles?.LowerItem}>
                 <DescType style={styles?.LowerDT}>Subject</DescType>
                 <DetailDesc style={styles?.LowerDD}>{subject}</DetailDesc>
               </LowerItem>
-            }
-            {publisher &&
+            )}
+            {publisher && (
               <LowerItem style={styles?.LowerItem}>
                 <DescType style={styles?.LowerDT}>Publisher</DescType>
                 <DetailDesc style={styles?.LowerDD}>{publisher}</DetailDesc>
               </LowerItem>
-            }
+            )}
           </LowerDiv>
         </div>
       </Container>

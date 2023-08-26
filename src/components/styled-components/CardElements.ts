@@ -83,21 +83,22 @@ export const Image = styled.img`
 export const TagsDiv = styled.div`
   display: flex;
   column-gap: 0.75rem;
-  font-size: 0.875rem;
+  font-size: 0.4rem;
   line-height: 1.25rem;
   color: #6b7280;
-  max-width: 40ch;
+  min-width: 40ch;
+  max-width: fit-content;
 `;
 
 export const Tags = styled.div`
   display: inline-flex;
   padding-top: 5px;
   padding-bottom: 5px;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 6px;
+  padding-right: 6px;
   align-items: center;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: 0.6rem;
   line-height: 1rem;
   font-weight: 700;
   color: #047857;
@@ -109,7 +110,7 @@ export const LowerDiv = styled.dl`
   display: flex;
   margin-top: 1rem;
   gap: 1rem;
-  width: 75%;
+  width: 100%;
   justify-content: space-between;
 
   @media (min-width: 640px) {
