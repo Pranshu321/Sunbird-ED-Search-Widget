@@ -5,3 +5,4 @@ export * from './components/Filter/Select';
 export * from './interfaces/interface';
 export * from './interfaces/Service_Function_Interfaces';
 export * from './api/api';
+export * from "./components/FetchingComponent/CardContext";

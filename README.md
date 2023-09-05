@@ -1,160 +1,359 @@
-# TSDX React User Guide
+# Sunbird React Filtering
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+A React filtering widget is a user interface component built using the React library that facilitates the process of filtering and refining data or content displayed on a web page. This widget is particularly useful when dealing with sunbird data or lists of items and allows users to interactively narrow down the displayed information based on their preferences or criteria.
 
-> This TSDX setup is meant for developing React component libraries (not apps!) that can be published to NPM. If you’re looking to build a React-based app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
+## Installation
 
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
+- **Prerequisites:** Ensure that you have Node.js and npm (Node Package Manager) installed on your system. You can download them from the official website: Node.js Downloads.
 
-## Commands
+- **Create a React App:** If you haven't already, create a React application using Create React App. This tool sets up a basic React project structure for you.
 
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
+- **Navigate to Your Project Directory:** Open your terminal or command prompt and navigate to the root directory of your React project.
+  Install the Filtering Widget Package: Use npm or yarn to install the filtering widget package. For example:
 
-The recommended workflow is to run TSDX in one terminal:
-
-```bash
-npm start # or yarn start
+```cmd
+npm install filtering-package
+# or
+yarn add filtering-package
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+- Import the Widget: In your React component where you want to use the filtering widget, import it at the top of your file:
 
-Then run the example inside another:
+```cmd
 
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
+import {ApiContext} from "filtering-package"
+
 ```
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, we use [Parcel's aliasing](https://parceljs.org/module_resolution.html#aliases).
+## Project Setup
 
-To do a one-off build, use `npm run build` or `yarn build`.
+The project is set up in a modular fashion, with each folder containing code for a specific component or functionality. The `components` folder contains the code for the React components, which are used to render the UI. The `Filter` folder contains the code for the filter component, which allows users to filter the data. The `styled-components` folder contains the code for the styled components, which are used to style the UI. The `interfaces` folder contains the interface definitions, which are used to define the data structures used by the project.
 
-To run tests, use `npm test` or `yarn test`.
+```
+api
+    api.ts
+    Service Function.ts
+
+components
+    card
+        Card.tsx
+    FetchingComponent
+        ApiContext.tsx
+        CardContext.tsx
+        Wrapper.tsx
+    Filter
+        index.tsx
+        Select.tsx
+        SingleSelect.tsx
+
+styled-components
+    CardElements.ts
+    ContextElements.ts
+    SelectElements.ts
+
+interfaces
+    interface.ts
+    Service Function_Interfaces.ts
+    index.tsx
+
+typings.d.ts
+```
+
+The following are some of the key files in the project setup:
+
+### Algorithms
+
+The `api` folder contains the code for fetching data from a remote server and filtering functions and other important functions for optimal working.
+
+- **api.ts :** This file defines the API endpoints. It contains the functions that are used to fetch data from the remote server.
+- **service_functions.ts :** The Service Function.ts file contains the service functions that are used to process the API response and additional refactoring.
+
+### Components
+
+- **Card :** This Folder contains the file `Card.tsx` This file defines the Card component. It is a React component that is used to render a card.
+- **FetchingComponent :** It is a React component that is used and with required props for the functioning.
+
+  - **ApiContext.tsx:** This file defines the ApiContext provider. It is a React context provider that is used to inject the API instance into the child components.
+  - **CardContext.tsx:** This file defines the CardContext provider. It is used to inject the Card props into the child components.
+  - **Wrapper.tsx:** This file wraps the ApiContext provider. It is used to ensure that all Card components have access to the API instance.
+
+- **Filter :** This folder contains two files one `Select.tsx` file defines a generic select component that can be used to filter the data by any property. The `SingleSelect.tsx` file defines a specific select component that can be used to filter the data by a single property.
+
+### Styled Components
+
+The styled-components folder contains the code for the styled components. The `CardElements.tsx`, `ContextElements.tsx`, and `SelectElements.tsx` files define the styled components that are used to style the filter component.
+
+### Interfaces
+
+The interfaces folder contains the interface definitions. The `interface.ts` file defines the interface for the filter component. The `Service Function_Interfaces.ts` file defines the interface for the service functions.
+
+## Features
+
+- **Filtering Criteria:** Users can specify criteria or parameters by which they want to filter the data. This might include text-based searches, date ranges, categories, or any other relevant attributes.
+
+- **Filter Inputs:** Input fields, dropdown menus, sliders, or checkboxes are provided for users to input their filtering criteria. For instance, on an e-commerce website, users might filter products by price range, brand, or product category.
+
+- **Card Fields Management:** Card Fields Management refers to the process of configuring and controlling the fields or attributes displayed on a digital card or card-based interface within a sunbird application.
+
+- **Multiple Filters (Additional Filters):** The widget should support multiple filters simultaneously, allowing users to refine their search with a combination of criteria.
+
+- **Customization:** The widget should be customizable to fit the visual style and functionality of the specific application or website.
 
 ## Configuration
 
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
+### Form
 
-### Jest
-
-Jest tests are set up to run with `npm test` or `yarn test`.
-
-### Bundle analysis
-
-Calculates the real cost of your library using [size-limit](https://github.com/ai/size-limit) with `npm run size` and visulize it with `npm run analyze`.
-
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```txt
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
-```
-
-#### React Testing Library
-
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
-
-### Rollup
-
-TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
-
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### GitHub Actions
-
-Two actions are added by default:
-
-- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
-- `size` which comments cost comparison of your library on every pull request using [`size-limit`](https://github.com/ai/size-limit)
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
+Description: The Form configuration which configure the
+Field: Formurl
 
 ```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
+[
+  {
+    id: 'api.form.read',
+    name: 'Categories',
+    responseCode: 'OK',
+    data: {
+      defaultLanguage: 'en',
+      PrimaryFields: {
+        Board: {
+          field: '',
+          isEnabled: true,
+        },
+        Medium: {
+          field: '',
+          isEnabled: true,
+        },
+        Class: {
+          field: '',
+          isEnabled: true,
+        },
+        Subject: {
+          field: '',
+          isEnabled: true,
+        },
+      },
+      additionalFields: {},
+    },
+    created_on: '2022-08-18T15:00:46.375Z',
+    last_modified_on: '2022-08-23T08:08:46.600Z',
+    rootOrgId: '*',
+    ts: '2023-08-09T07:13:17.674Z',
+    ver: '1.0',
+  },
+];
 ```
 
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+### Default Channel Configuration:
 
-## Module Formats
+**Description**: This section configures default settings related to channel communication. Channels are typically used for data retrieval or messaging.
 
-CJS, ESModules, and UMD module formats are supported.
+**Fields Accepted:**
 
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
+- Method: The HTTP request method (e.g., GET, POST) is used for default channel communication.
+- Headers (Optional): HTTP headers are included in the default channel request.
+- Cache: The caching strategy applied to default channel requests (e.g., "default").
 
-## Deploying the Example Playground
+### Search API Configuration:
 
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
+**Description**: This configuration section is related to the Search API, which is commonly used for querying and retrieving data.
 
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
+**Fields Accepted:**
+
+- Method: The HTTP request method (e.g., GET, POST) for Search API requests.
+- Headers (Optional): HTTP headers included in Search API requests.
+- Body (Optional): The content of the request body for Search API requests.
+
+### Channel Configuration:
+
+**Description**: Similar to the Default Channel Configuration, this section pertains to the configuration of a specific channel used for data retrieval.
+
+**Fields Accepted:**
+
+- Method: The HTTP request method for Get Channel requests.
+- Headers: HTTP headers are included in Get Channel requests.
+- Cache: The caching strategy applied to Get Channel requests.
+- Field: GetChannel
+
+### Terms Read Configuration:
+
+**Description**: This section configures how terms are read or retrieved, potentially for use in the application.
+
+**Fields Accepted:**
+
+- Method: The HTTP request method for reading terms.
+- Headers: HTTP headers included in terms of reading requests.
+- Body: The content of the request body for terms reading requests (typically empty).
+- Field: TermsRead
+
+### Hostname:
+
+- **Description**: The Hostname specifies the base URL (https://dev.sunbirdsaas.com) where API requests are directed.
+- Field: hostname
+
+### Card Fields Properties:
+
+Description: This section defines properties related to the display of cards or items. Cards are often used to represent data visually. We have to put Fields in `CardFieldsProps` which we have to show in card.
+
+**Fields Accepted:**
+
+- Name: The field name for card display.
+- Type: The type of field for card display.
+- Tags: An array of tags associated with the card.
+- Image: The field used for displaying card images.
+- Publisher: The field used for displaying the card's publisher information.
+- Subject: The field used for displaying the card's subject.
+- Field: CardFieldsProps
+
+```ts
+CardFieldsProps={{
+          name: {
+            field: 'name',
+          },
+          type: {
+            field: "se_subjects"
+          },
+          tags: {
+            TagsFieldArray: [
+              "medium",
+              "se_boards",
+              "se_subjects",
+            ]
+          },
+          image: {
+            field: "appIcon"
+          },
+          publisher: { field: "organisation" },
+          subject: { field: "se_subjects" }
+        }}
 ```
 
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+### Default Cache Setting:
 
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
+**Description:** This setting determines the caching behavior of the component, potentially influencing how data is retrieved and displayed.
+Field: cache
+
+### Filter Configuration:
+
+**Description**: This section defines various filters that can be applied to the data. Filters allow users to narrow down or customize data views.
+
+**Fields Accepted:**
+
+- Name: The display name of the filter.
+- Field: The corresponding API field associated with the filter.
+
+```
+Here, are the master categories
+Supported Filters (examples):
+Board
+Medium
+Subject
+Grade Level
 ```
 
-## Named Exports
+- Field: filterConfig
 
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
+### Additional Filter Configuration:
 
-## Including Styles
+- Description: Additional filter configuration options that can be applied to enhance data filtering capabilities.
 
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
+**Fields Accepted:**
 
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
+- Name: The display name of the filter.
+- Field: The corresponding API field associated with the filter.
+- Is Enabled: Indicates whether the filter is enabled (true or false).
 
-## Publishing to NPM
+### StyleProps
 
-We recommend using [np](https://github.com/sindresorhus/np).
+The `StyleProps` interface defines the style props that can be used to customize the look and feel of the filter component.
 
-## Usage with Lerna
+The interface has three properties:
 
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
+- **apiContextStyle :** This property is used to style the container that holds the API context provider.
+  - `Container`: This prop is used to style the container element.
+  - `Sidebar`: This prop is used to style the sidebar element.
+  - `FiltersDiv`: This prop is used to style the filters div element.
+  - `Filter`: This prop is used to style the filter element.
+  - `Button`: This prop is used to style the button element.
+  - `ListDiv`: This prop is used to style the list div element.
+- **SelectStyle :** This property is used to style the select component.
+  - `container`: This prop is used to style the container element.
+  - `OptionNameStyle`: This prop is used to style the option name element.
+  - `OptionStyle`: This prop is used to style the option element.
+  - `OptionDivStyle`: This prop is used to style the option div element.
+  - `select`: This prop is used to style the select element.
+  - `OptionsItem`: This prop is used to style the options item element.
+- **CardStyle :** This property is used to style the card component.
+  - `container`: This prop is used to style the container element.
+  - `headingDiv`: This prop is used to style the heading div element.
+  - `heading`: This prop is used to style the heading element.
+  - `type`: This prop is used to style the type element.
+  - `imageDiv`: This prop is used to style the image div element.
+  - `image`: This prop is used to style the image element.
+  - `tagsDiv`: This prop is used to style the tags div element.
+  - `LowerDiv`: This prop is used to style the lower div element.
+  - `LowerItem`: This prop is used to style the lower item element.
+  - `LowerDT`: This prop is used to style the lower DT element.
+  - `LowerDD`: This prop is used to style the lower DD element.
+  - `tag`: This prop is used to style the tag element.
 
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
+This detailed documentation explains the purpose and potential usage of each configuration option within the Wrapper component. It also outlines the types of fields accepted by each configuration element, helping users understand how to customize and adapt the component to their specific needs.
 
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
+## ScreenShots and Demo
 
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
-```
+![image](https://github.com/komalm/searchwidget/assets/86917304/2157c56e-2b6f-4dea-b7ea-78a21048ce50)
 
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
+![ezgif-1-c2738da5fb](https://github.com/komalm/searchwidget/assets/86917304/00a5e1d1-6aca-48f9-8d27-f3e651c475fd)
+
+## Contributing Guidelines
+
+We welcome contributions from the community to improve this project. By participating, you agree to follow these guidelines to maintain a positive and collaborative environment.
+
+### Getting Started
+
+1. Fork the repository on GitHub.
+2. Clone your forked repository to your local machine.
+3. Create a new branch for your work: `git checkout -b feature/your-feature-name`.
+
+### Making Changes
+
+1. Ensure that your code adheres to the project's coding standards.
+2. Make meaningful and focused commits. Use descriptive commit messages.
+3. Keep pull requests (PRs) small and focused on a single feature or bug fix.
+4. Update documentation as necessary.
+5. Test your changes thoroughly.
+
+### Submitting a Pull Request (PR)
+
+1. Push your changes to your forked repository.
+2. Create a PR from your fork to the main project repository.
+3. Provide a clear title and description for your PR.
+4. Mention any related issues using keywords like "Fixes #123" in the description.
+5. Your PR will be reviewed by project maintainers. Be prepared to make changes if requested.
+
+### Code of Conduct
+
+Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming and inclusive community.
+
+### Reporting Issues
+
+If you encounter bugs or have feature requests, please [open an issue](https://github.com/your-project/repository/issues) on GitHub.
+
+### Reviewing
+
+Contributions will be reviewed by maintainers. Constructive feedback may be provided, and changes may be requested. Be patient and open to feedback.
+
+### Licensing
+
+By contributing to this project, you agree that your contributions will be licensed under the project's [LICENSE](LICENSE).
+
+**Thank you for your contributions! 🎉**
+
+## Links to Other Resources
+
+Here are some additional resources that may be helpful as you contribute to this project:
+
+- [Sunbird Forms](https://documenter.getpostman.com/view/25186239/2s93Y2TNAw)
+- [Installing Sunbird on Windows](https://github.com/orgs/Sunbird-Ed/discussions/463)
+- [TSDX Package Development Tool](https://tsdx.io/)
+- [About Diksha](https://ed.sunbird.org/learn/adopters/diksha)
+- [Sunbird ED Collection](https://documenter.getpostman.com/view/25186239/2s93eU2ZZ1#0ba7ecdf-cf32-4b3b-b9dc-e71825093cfd)

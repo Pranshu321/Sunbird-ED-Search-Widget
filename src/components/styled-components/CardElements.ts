@@ -6,7 +6,6 @@ export const Container = styled.div`
   padding: 1rem;
   border-radius: 0.5rem;
   border-width: 1px;
-  /* max-height: max-content; */
   border-color: gray;
   border-bottom-width: 0.5rem;
   border-bottom-color: #a7f3d0;

@@ -41,15 +41,13 @@ const App = () => {
   return (
     <>
       <Wrapper
-        Formurl='http://localhost:3000/form'
+        Formurl='https://formapi-hyhj.onrender.com/liveform'
         DefaultChannel={{
-          url: GetDefaultChannel.url,
           method: GetDefaultChannel.requestOptions.method,
           header: GetDefaultChannel.requestOptions.headers,
           cache: "default"
         }}
         SearchAPI={{
-          url: SearchAPI.url,
           body: SearchAPI.requestOptions.body,
           headers: SearchAPI.requestOptions.headers,
           method: SearchAPI.requestOptions.method
@@ -60,7 +58,6 @@ const App = () => {
           method: GetChannel.requestOptions.method
         }}
         TermsRead={{
-          url: TermsRead.url,
           headers: TermsRead.requestOptions.headers,
           method: TermsRead.requestOptions.method,
           body: ""

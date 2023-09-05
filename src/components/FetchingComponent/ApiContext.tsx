@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { createContext, useEffect } from 'react';
 import { fetchData } from '../../api/api';
 import useState from 'react-usestateref';
 import { Filter } from '../Filter';
@@ -27,6 +27,14 @@ import {
 import { ApiContextProps } from '../../interfaces/interface';
 import { SingleSelect } from '../Filter/SingleSelect';
 
+export const CardContext = createContext({
+  name: "",
+  image: "",
+  subject: "",
+  type: "",
+  publisher: "",
+  tags: [""],
+});
 export const ApiContext = ({
   children,
   Formurl,
@@ -37,6 +45,7 @@ export const ApiContext = ({
   filterConfig,
   TermsAPI,
   addtionalFilterConfig,
+  YourCard,
   Frameworks,
   CardFieldsProps,
 }: ApiContextProps) => {
@@ -47,6 +56,8 @@ export const ApiContext = ({
   const [filterConfigState, setFilterConfig, filterConfigRef] = useState<
     Array<any>
   >([]);
+
+  // Card Context
 
   // Filters Options Data
   const [filtersOptionData, setFiltersOptionData, FiltersOptionRef] = useState<
@@ -231,9 +242,8 @@ export const ApiContext = ({
         ? 'ekstep_ncert_k-12'
         : GetFrameWorkID(Frameworks, FrameworkRef.current);
     fetchData({
-      url: `${hostname}/api/content/v1/search?orgdetails=orgName,email&framework=${
-        FrameworkRef.current === '' ? 'ekstep_ncert_k-12' : FrameworkID
-      }`,
+      url: `${hostname}/api/content/v1/search?orgdetails=orgName,email&framework=${FrameworkRef.current === '' ? 'ekstep_ncert_k-12' : FrameworkID
+        }`,
       cache: 'default',
       method: SearchAPI.method,
       body: FiltersSetRef.current,
@@ -372,23 +382,36 @@ export const ApiContext = ({
           </Filter>
         </FiltersDiv>
       </Sidebar>
-      <ListDiv style={styles?.apiContextDiv?.ListDiv}>
+      <ListDiv>
         {(RenderContentRef.current.length !== 0
           ? RenderContent
           : contentRef.current
         )?.map((item, idx) => {
           const DataObj = CardFieldsRender(item, CardFieldsProps);
           return (
-            <Card
-              styles={styles?.CardStyle}
-              key={idx + 1}
-              name={DataObj['name'] ? DataObj['name'] : ''}
-              publisher={DataObj['publisher'] ? DataObj['publisher'] : ''}
-              subject={DataObj['subject'] ? DataObj['subject'] : ''}
-              type={DataObj['type'] ? DataObj['type'] : ''}
-              tags={DataObj['tags'] ? DataObj['tags'] : []}
-              image={DataObj['image'] ? DataObj['image'] : ''}
-            />
+            YourCard === undefined ? (
+              <Card
+                styles={styles?.CardStyle}
+                key={idx + 1}
+                name={DataObj["name"] ? DataObj["name"] : ""}
+                publisher={DataObj["publisher"] ? DataObj["publisher"] : ""}
+                subject={DataObj["subject"] ? DataObj["subject"] : ""}
+                type={DataObj["type"] ? DataObj["type"] : ""}
+                tags={DataObj["tags"] ? DataObj["tags"] : []}
+                image={DataObj["image"] ? DataObj["image"] : ""}
+              />
+            ) : (
+              <CardContext.Provider value={{
+                name: DataObj["name"] ? DataObj["name"] : "",
+                publisher: DataObj["publisher"] ? DataObj["publisher"] : "",
+                subject: DataObj["subject"] ? DataObj["subject"] : "",
+                type: DataObj["type"] ? DataObj["type"] : "",
+                tags: DataObj["tags"] ? DataObj["tags"] : [],
+                image: DataObj["image"] ? DataObj["image"] : "",
+              }}>
+                {YourCard}
+              </CardContext.Provider>
+            )
           );
         })}
       </ListDiv>

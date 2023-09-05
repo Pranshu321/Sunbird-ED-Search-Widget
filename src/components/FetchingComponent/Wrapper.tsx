@@ -17,6 +17,7 @@ export const Wrapper = ({
   styles,
   filterConfig,
   addtionalFilterConfig,
+  YourCard,
 }: WrapperProps) => {
   const [defaultChannel, setdefaultChannel, defaultChannelRef] = useStateRef<
     string
@@ -31,7 +32,7 @@ export const Wrapper = ({
 
   useEffect(() => {
     fetchData({
-      url: DefaultChannel.url,
+      url: `${hostname}/learner/data/v1/system/settings/get/custodianOrgId`,
       method: DefaultChannel.method,
       headers: DefaultChannel.header,
       cache: DefaultChannel.cache,
@@ -67,17 +68,16 @@ export const Wrapper = ({
         Frameworks={frameWorksArrayRef.current}
         Formurl={Formurl}
         SearchAPI={{
-          url: SearchAPI.url,
           headers: SearchAPI.headers,
           body: SearchAPI.body,
           method: SearchAPI.method,
         }}
         TermsAPI={{
-          url: TermsRead.url,
           headers: TermsRead.headers,
           method: TermsRead.method,
         }}
         hostname={hostname}
+        YourCard={YourCard}
         filterConfig={filterConfig}
         children={children}
         cache={cache === undefined ? 'default' : cache}
