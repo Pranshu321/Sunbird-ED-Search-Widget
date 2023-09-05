@@ -103,7 +103,7 @@ The interfaces folder contains the interface definitions. The `interface.ts` fil
 
 ### Form
 
-Description: The Form configuration which configure the
+Description: The Form configuration which configures the 
 Field: Formurl
 
 ```js
@@ -181,7 +181,7 @@ Field: Formurl
 **Fields Accepted:**
 
 - Method: The HTTP request method for reading terms.
-- Headers: HTTP headers included in terms of reading requests.
+- Headers: HTTP headers are included in terms of reading requests.
 - Body: The content of the request body for terms reading requests (typically empty).
 - Field: TermsRead
 
@@ -192,7 +192,7 @@ Field: Formurl
 
 ### Card Fields Properties:
 
-Description: This section defines properties related to the display of cards or items. Cards are often used to represent data visually. We have to put Fields in `CardFieldsProps` which we have to show in card.
+Description: This section defines properties related to the display of cards or items. Cards are often used to represent data visually. We have to put Fields in `CardFieldsProps` which we have to show on card.
 
 **Fields Accepted:**
 
@@ -336,7 +336,7 @@ Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming an
 
 ### Reporting Issues
 
-If you encounter bugs or have feature requests, please [open an issue](https://github.com/your-project/repository/issues) on GitHub.
+If you encounter bugs or have feature requests, please [open an issue](https://github.com/Pranshu321/Sunbird-ED-Search-Widget/issues) on GitHub.
 
 ### Reviewing
 
