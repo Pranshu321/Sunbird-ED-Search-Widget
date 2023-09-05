@@ -300,9 +300,13 @@ This detailed documentation explains the purpose and potential usage of each con
 
 ## ScreenShots and Demo
 
+
 ![image](https://github.com/komalm/searchwidget/assets/86917304/2157c56e-2b6f-4dea-b7ea-78a21048ce50)
 
+
 ![ezgif-1-c2738da5fb](https://github.com/komalm/searchwidget/assets/86917304/00a5e1d1-6aca-48f9-8d27-f3e651c475fd)
+
+[Live Demo](https://guileless-alpaca-e93206.netlify.app/)
 
 ## Contributing Guidelines
 
