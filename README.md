@@ -348,7 +348,7 @@ Contributions will be reviewed by maintainers. Constructive feedback may be prov
 
 ### Licensing
 
-By contributing to this project, you agree that your contributions will be licensed under the project's [LICENSE](LICENSE).
+By contributing to this project, you agree that your contributions will be licensed under the project's [LICENSE](LICENSE) .
 
 **Thank you for your contributions! 🎉**
 
