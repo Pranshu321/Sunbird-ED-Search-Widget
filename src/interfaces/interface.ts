@@ -100,17 +100,29 @@ export interface WrapperProps {
     headers: object;
     method: string;
     body: string;
+    cache?:
+      | 'default'
+      | 'no-store'
+      | 'reload'
+      | 'force-cache'
+      | 'only-if-cached'
+      | 'no-cache';
   };
   children?: React.ReactNode;
-  Formurl: string;
+  Formurl: {
+    url: string;
+    method: string;
+    body?: string;
+    headers?: object;
+    cache:
+      | 'default'
+      | 'no-store'
+      | 'reload'
+      | 'force-cache'
+      | 'only-if-cached'
+      | 'no-cache';
+  };
   CardFieldsProps: CardFieldsObject;
-  cache:
-    | 'default'
-    | 'no-store'
-    | 'reload'
-    | 'force-cache'
-    | 'only-if-cached'
-    | 'no-cache';
   styles?: StyleProps;
   filterConfig: Array<FilterConfigProps>;
   addtionalFilterConfig?: Array<FilterConfigProps> | undefined;
@@ -119,7 +131,19 @@ export interface WrapperProps {
 export interface ApiContextProps {
   children?: React.ReactNode;
   YourCard?: React.ReactNode;
-  Formurl: string;
+  Formurl: {
+    url: string;
+    method: string;
+    body?: string;
+    headers?: object;
+    cache:
+      | 'default'
+      | 'no-store'
+      | 'reload'
+      | 'force-cache'
+      | 'only-if-cached'
+      | 'no-cache';
+  };
   SearchAPI: {
     method: string;
     headers?: object;
@@ -127,13 +151,6 @@ export interface ApiContextProps {
   };
   CardFieldsProps: CardFieldsObject;
   hostname: string;
-  cache:
-    | 'default'
-    | 'no-store'
-    | 'reload'
-    | 'force-cache'
-    | 'only-if-cached'
-    | 'no-cache';
   styles?: StyleProps;
   filterConfig: Array<FilterConfigProps>;
   addtionalFilterConfig?: Array<FilterConfigProps> | undefined;
@@ -141,6 +158,13 @@ export interface ApiContextProps {
     method: string;
     headers?: object;
     body?: string;
+    cache?:
+      | 'default'
+      | 'no-store'
+      | 'reload'
+      | 'force-cache'
+      | 'only-if-cached'
+      | 'no-cache';
   };
   Frameworks: Array<string>;
 }

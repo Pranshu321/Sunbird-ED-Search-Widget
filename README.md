@@ -130,7 +130,7 @@ Here is the example of the form configuration
                 "framework": {
                     "fields": [
                         {
-                            "code": "domain",
+                            "code": "board",
                             "visible": true,
                             "depends": [
                                 "framework"
@@ -141,20 +141,20 @@ Here is the example of the form configuration
                             "renderingHints": {
                                 "semanticColumnWidth": "six"
                             },
-                            "description": "Domain",
+                            "description": "board",
                             "index": 1,
-                            "label": "Domain",
+                            "label": "board",
                             "required": true,
-                            "name": "domain",
+                            "name": "board",
                             "inputType": "select",
-                            "placeholder": "Domain"
+                            "placeholder": "board"
                         },
                         {
-                            "code": "curriculargoal",
+                            "code": "medium",
                             "visible": true,
                             "depends": [
                                 "framework",
-                                "domain"
+                                "board"
                             ],
                             "editable": true,
                             "displayProperty": "Editable",
@@ -166,17 +166,17 @@ Here is the example of the form configuration
                             "index": 2,
                             "label": "Curricular goal",
                             "required": true,
-                            "name": "curriculargoal",
+                            "name": "medium",
                             "inputType": "multiSelect",
                             "placeholder": "Curricular goal"
                         },
                         {
-                            "code": "competency",
+                            "code": "grade",
                             "visible": true,
                             "depends": [
                                 "framework",
-                                "domain",
-                                "curriculargoal"
+                                "board",
+                                "medium"
                             ],
                             "editable": true,
                             "displayProperty": "Editable",
@@ -184,22 +184,22 @@ Here is the example of the form configuration
                             "renderingHints": {
                                 "semanticColumnWidth": "six"
                             },
-                            "description": "Competency",
+                            "description": "grade",
                             "index": 3,
-                            "label": "Competency",
+                            "label": "grade",
                             "required": true,
-                            "name": "competency",
+                            "name": "grade",
                             "inputType": "multiSelect",
-                            "placeholder": "Competency"
+                            "placeholder": "grade"
                         },
                         {
-                            "code": "learningOutcome",
+                            "code": "subject",
                             "visible": true,
                             "depends": [
                                 "framework",
-                                "domain",
-                                "curriculargoal",
-                                "competency"
+                                "board",
+                                "medium",
+                                "grade"
                             ],
                             "editable": true,
                             "displayProperty": "Editable",
@@ -209,18 +209,18 @@ Here is the example of the form configuration
                             },
                             "description": "Learning Outcome",
                             "index": 4,
-                            "label": "learningOutcome",
+                            "label": "subject",
                             "required": true,
-                            "name": "learningOutcome",
+                            "name": "subject",
                             "inputType": "multiSelect",
-                            "placeholder": "Learning Outcome"
+                            "placeholder": "Subject"
                         }
                     ]
                 },
                 "content": {
                     "fields": [
                         {
-                            "code": "author",
+                            "code": "identifier",
                             "visible": true,
                             "depends": [],
                             "editable": true,
@@ -229,13 +229,13 @@ Here is the example of the form configuration
                             "renderingHints": {
                                 "semanticColumnWidth": "six"
                             },
-                            "description": "Author",
+                            "description": "identifier",
                             "index": 1,
-                            "label": "Author",
+                            "label": "identifier",
                             "required": false,
-                            "name": "Author",
+                            "name": "Identifier",
                             "inputType": "select",
-                            "placeholder": "Author"
+                            "placeholder": "identifier"
                         }
                     ]
                 }

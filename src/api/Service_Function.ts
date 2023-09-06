@@ -90,8 +90,6 @@ export function FilterDataExtract({
           }
         }
         if (Array.isArray(temp)) {
-          console.log('temp', temp.sort());
-
           if (temp.length !== 0)
             OptionValueArray.push({
               name: item,
@@ -184,7 +182,7 @@ export function TermsFetch(
   setMasterFieldsTerms: Function,
   FilterConfig?: any
 ) {
-  const Categories = data.result.framework.categories;
+  const Categories = data?.result?.framework?.categories;
   const TermsObject: any = {};
   Categories.map((item: any) => {
     const name = item.name;
@@ -219,7 +217,7 @@ export function MasterFieldContentChange(
   const bodyJSON = JSON.parse(body);
   const TempObj: any = {};
 
-  filtersArray.map((item: any) => {
+  filtersArray?.map((item: any) => {
     const itemName = item.name.toLowerCase();
     const configfiled = filterConfig.filter((fil: any) => {
       return fil.name.toLowerCase() === itemName;
@@ -241,7 +239,7 @@ export function DependentTermsFetch(
   filterOptions: any
 ) {
   let obj: any = {};
-  thing.result.framework.categories?.map((item: any) => {
+  thing?.result?.framework?.categories?.map((item: any) => {
     filters.map((filter: any) => {
       if (item.code.toLowerCase() === filter.name.toLowerCase()) {
         const arr = filter.value;
@@ -269,7 +267,7 @@ export function DependentTermsFetch(
     });
   });
   const Keys = Object.keys(filterOptions[0]);
-  Keys.map((item: any) => {
+  Keys?.map((item: any) => {
     if (obj.hasOwnProperty(item)) {
       filterOptions[0][item].terms = obj[item];
     }

@@ -41,7 +41,13 @@ const App = () => {
   return (
     <>
       <Wrapper
-        Formurl='https://formapi-hyhj.onrender.com/liveform'
+        Formurl={
+          {
+            url: 'http://localhost:3000/liveform',
+            cache: "default",
+            method: "GET"
+          }
+        }
         DefaultChannel={{
           method: GetDefaultChannel.requestOptions.method,
           header: GetDefaultChannel.requestOptions.headers,
@@ -83,7 +89,6 @@ const App = () => {
           publisher: { field: "organisation" },
           subject: { field: "se_subjects" }
         }}
-        cache='reload'
         filterConfig={[
           {
             name: "Board",

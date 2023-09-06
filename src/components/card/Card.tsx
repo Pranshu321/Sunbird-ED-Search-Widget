@@ -31,43 +31,51 @@ export const Card = ({
   // Return JSX
   return (
     // Use the hidden attribute to conditionally hide the div based on the value of name
-    <div hidden={name === ''}>
+    <div>
       {/* Container */}
       <Container style={styles?.container}>
         {/* TopContent */}
         <TopContent style={styles?.headingDiv}>
           <div>
             {/* Link with name as text */}
-            <Link style={styles?.heading}>{name}</Link>
+            {name !== '' &&
+              <Link style={styles?.heading}>{name}</Link>
+            }
             {/* Type with type as text */}
             {type && <Type style={styles?.type}>{type}</Type>}
           </div>
           {/* ImageDiv */}
-          <ImageDiv style={styles?.imageDiv}>
-            {/* Image with image as src */}
-            <Image
-              style={styles?.image}
-              src={
-                image
-                  ? image
-                  : 'https://static.vecteezy.com/system/resources/previews/004/141/669/original/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg'
-              }
-            />
-          </ImageDiv>
+          {
+
+            image &&
+            <ImageDiv style={styles?.imageDiv}>
+              {/* Image with image as src */}
+              <Image
+                style={styles?.image}
+                src={
+                  image
+                    ? image
+                    : 'https://static.vecteezy.com/system/resources/previews/004/141/669/original/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg'
+                }
+              />
+            </ImageDiv>
+          }
         </TopContent>
         <div style={{ marginTop: '10px' }}>
           {/* Hide the div if tags array is empty */}
-          <div hidden={tags?.length === 0}>
-            {/* TagsDiv */}
-            <TagsDiv style={styles?.tagsDiv}>
-              {/* Render each tag in the tags array */}
-              {tags?.map((tag, idx) => (
-                <Tags style={styles?.tag} key={idx + 1}>
-                  {tag}
-                </Tags>
-              ))}
-            </TagsDiv>
-          </div>
+          {tags?.length !== 0 &&
+            <div>
+              {/* TagsDiv */}
+              <TagsDiv style={styles?.tagsDiv}>
+                {/* Render each tag in the tags array */}
+                {tags?.map((tag, idx) => (
+                  <Tags style={styles?.tag} key={idx + 1}>
+                    {tag}
+                  </Tags>
+                ))}
+              </TagsDiv>
+            </div>
+          }
           {/* LowerDiv */}
           <LowerDiv style={styles?.LowerDiv}>
             {/* Render subject if it exists */}

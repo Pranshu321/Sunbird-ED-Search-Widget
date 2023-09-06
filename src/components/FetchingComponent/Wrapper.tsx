@@ -8,7 +8,6 @@ export const Wrapper = ({
   hostname,
   DefaultChannel,
   GetChannel,
-  cache,
   SearchAPI,
   TermsRead,
   children,
@@ -75,12 +74,12 @@ export const Wrapper = ({
         TermsAPI={{
           headers: TermsRead.headers,
           method: TermsRead.method,
+          cache: TermsRead.cache,
         }}
         hostname={hostname}
         YourCard={YourCard}
         filterConfig={filterConfig}
         children={children}
-        cache={cache === undefined ? 'default' : cache}
         styles={styles}
         CardFieldsProps={CardFieldsProps}
         addtionalFilterConfig={addtionalFilterConfig}

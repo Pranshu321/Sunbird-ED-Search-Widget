@@ -39,7 +39,6 @@ export const ApiContext = ({
   children,
   Formurl,
   SearchAPI,
-  cache,
   hostname,
   styles,
   filterConfig,
@@ -133,8 +132,11 @@ export const ApiContext = ({
 
   function FetchAndUpdateFilterConfig() {
     fetchData({
-      url: Formurl,
-      cache: cache,
+      url: Formurl.url,
+      cache: Formurl.cache,
+      body: Formurl.body,
+      headers: Formurl.headers,
+      method: Formurl.method
     })
       .then((res: any) => {
         setFilterConfig(res);
@@ -170,7 +172,7 @@ export const ApiContext = ({
 
     fetchData({
       url: `${hostname}/api/framework/v1/read/${FrameworkID}?categories=board,gradeLevel,medium,class,subject`,
-      cache,
+      cache: TermsAPI.cache || "default",
       method: TermsAPI.method,
       body: TermsAPI.body,
       headers: TermsAPI.headers,
@@ -191,7 +193,7 @@ export const ApiContext = ({
         : GetFrameWorkID(Frameworks, FrameworkRef.current);
     fetchData({
       url: `${hostname}/api/framework/v1/read/${FrameworkID}?categories=board,gradeLevel,medium,class,subject`,
-      cache,
+      cache: TermsAPI.cache || "default",
       method: TermsAPI.method,
       body: TermsAPI.body,
       headers: TermsAPI.headers,
@@ -214,7 +216,7 @@ export const ApiContext = ({
         if (flag) {
           fetchData({
             url: `${hostname}/api/framework/v1/read/${FrameworkID}?categories=board,gradeLevel,medium,class,subject`,
-            cache,
+            cache: TermsAPI.cache || 'default',
             method: TermsAPI.method,
             headers: TermsAPI.headers,
           })

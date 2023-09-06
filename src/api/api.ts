@@ -10,7 +10,7 @@ export const fetchData = async ({
   const response = await fetch(url, {
     headers: headers,
     body: body,
-    method: method === undefined || method === null ? 'GET' : method,
+    method: method || "GET",
     cache: cache,
   });
   if (!response.ok) {
