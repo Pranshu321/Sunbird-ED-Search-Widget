@@ -103,44 +103,151 @@ The interfaces folder contains the interface definitions. The `interface.ts` fil
 
 ### Form
 
-Description: The Form configuration which configures the 
-Field: Formurl
+- Description: The Form configuration which configures the
+- Field: Formurl
+
+Here is the example of the form configuration
 
 ```js
-[
-  {
-    id: 'api.form.read',
-    name: 'Categories',
-    responseCode: 'OK',
-    data: {
-      defaultLanguage: 'en',
-      PrimaryFields: {
-        Board: {
-          field: '',
-          isEnabled: true,
-        },
-        Medium: {
-          field: '',
-          isEnabled: true,
-        },
-        Class: {
-          field: '',
-          isEnabled: true,
-        },
-        Subject: {
-          field: '',
-          isEnabled: true,
-        },
-      },
-      additionalFields: {},
+{
+    "id": "api.form.read",
+    "params": {
+        "resmsgid": "610b4c5d-4027-4416-b114-d93b1a259c92",
+        "msgid": "7cbec91e-c7e8-4bc5-808c-d8e3fbb38023",
+        "status": "successful"
     },
-    created_on: '2022-08-18T15:00:46.375Z',
-    last_modified_on: '2022-08-23T08:08:46.600Z',
-    rootOrgId: '*',
-    ts: '2023-08-09T07:13:17.674Z',
-    ver: '1.0',
-  },
-];
+    "responseCode": "OK",
+    "result": {
+        "form": {
+            "type": "content",
+            "subtype": "resources",
+            "action": "buildsearchfilter",
+            "component": "*",
+            "framework": "saasdemoflnfw",
+            "data": {
+                "templateName": "defaultTemplate",
+                "action": "buildsearchfilter",
+                "framework": {
+                    "fields": [
+                        {
+                            "code": "domain",
+                            "visible": true,
+                            "depends": [
+                                "framework"
+                            ],
+                            "editable": true,
+                            "displayProperty": "Editable",
+                            "dataType": "text",
+                            "renderingHints": {
+                                "semanticColumnWidth": "six"
+                            },
+                            "description": "Domain",
+                            "index": 1,
+                            "label": "Domain",
+                            "required": true,
+                            "name": "domain",
+                            "inputType": "select",
+                            "placeholder": "Domain"
+                        },
+                        {
+                            "code": "curriculargoal",
+                            "visible": true,
+                            "depends": [
+                                "framework",
+                                "domain"
+                            ],
+                            "editable": true,
+                            "displayProperty": "Editable",
+                            "dataType": "list",
+                            "renderingHints": {
+                                "semanticColumnWidth": "six"
+                            },
+                            "description": "Curricular goal",
+                            "index": 2,
+                            "label": "Curricular goal",
+                            "required": true,
+                            "name": "curriculargoal",
+                            "inputType": "multiSelect",
+                            "placeholder": "Curricular goal"
+                        },
+                        {
+                            "code": "competency",
+                            "visible": true,
+                            "depends": [
+                                "framework",
+                                "domain",
+                                "curriculargoal"
+                            ],
+                            "editable": true,
+                            "displayProperty": "Editable",
+                            "dataType": "list",
+                            "renderingHints": {
+                                "semanticColumnWidth": "six"
+                            },
+                            "description": "Competency",
+                            "index": 3,
+                            "label": "Competency",
+                            "required": true,
+                            "name": "competency",
+                            "inputType": "multiSelect",
+                            "placeholder": "Competency"
+                        },
+                        {
+                            "code": "learningOutcome",
+                            "visible": true,
+                            "depends": [
+                                "framework",
+                                "domain",
+                                "curriculargoal",
+                                "competency"
+                            ],
+                            "editable": true,
+                            "displayProperty": "Editable",
+                            "dataType": "list",
+                            "renderingHints": {
+                                "semanticColumnWidth": "six"
+                            },
+                            "description": "Learning Outcome",
+                            "index": 4,
+                            "label": "learningOutcome",
+                            "required": true,
+                            "name": "learningOutcome",
+                            "inputType": "multiSelect",
+                            "placeholder": "Learning Outcome"
+                        }
+                    ]
+                },
+                "content": {
+                    "fields": [
+                        {
+                            "code": "author",
+                            "visible": true,
+                            "depends": [],
+                            "editable": true,
+                            "displayProperty": "Editable",
+                            "dataType": "text",
+                            "renderingHints": {
+                                "semanticColumnWidth": "six"
+                            },
+                            "description": "Author",
+                            "index": 1,
+                            "label": "Author",
+                            "required": false,
+                            "name": "Author",
+                            "inputType": "select",
+                            "placeholder": "Author"
+                        }
+                    ]
+                }
+            },
+            "created_on": "2023-08-23T05:39:31.505Z",
+            "last_modified_on": null,
+            "rootOrgId": "013839789763264512379"
+        }
+    },
+    "ts": "2023-09-06T06:32:51.056Z",
+    "ver": "1.0"
+}
 ```
 
 ### Default Channel Configuration:
@@ -300,13 +407,11 @@ This detailed documentation explains the purpose and potential usage of each con
 
 ## ScreenShots and Demo
 
-
 ![image](https://github.com/komalm/searchwidget/assets/86917304/2157c56e-2b6f-4dea-b7ea-78a21048ce50)
-
 
 ![ezgif-1-c2738da5fb](https://github.com/komalm/searchwidget/assets/86917304/00a5e1d1-6aca-48f9-8d27-f3e651c475fd)
 
-[Live Demo](https://guileless-alpaca-e93206.netlify.app/)
+[Live Demo](https://sunbird-filtering.netlify.app/)
 
 ## Contributing Guidelines
 
